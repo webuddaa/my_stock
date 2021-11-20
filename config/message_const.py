@@ -6,6 +6,6 @@
 
 EMAIL_ID = "buddaa@163.com"
 
-EMAIL_PASSWORD = "xdyxxf99"
+EMAIL_PASSWORD = ""
 
 WEB_HOOK_KEY = ""

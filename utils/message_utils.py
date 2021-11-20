@@ -9,8 +9,8 @@ import requests
 import zmail
 from typing import List
 
-from my_stock_and_coin.config.message_const import WEB_HOOK_KEY, EMAIL_ID, EMAIL_PASSWORD
-from my_stock_and_coin.exception.message_exception import SendMailException, SendWechatException
+from config.message_const import WEB_HOOK_KEY, EMAIL_ID, EMAIL_PASSWORD
+from exception.message_exception import SendMailException, SendWechatException
 
 
 def my_send_mail(subject: str, content_text: str, to_addr: List[str] or str):
