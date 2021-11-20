@@ -7,8 +7,8 @@ import baostock as bs
 import pandas as pd
 from datetime import datetime, timedelta
 
-from my_stock_and_coin.exception.stock_exception import StockEmptyError
-from my_stock_and_coin.utils.date_utils import time_str_convert
+from exception.stock_exception import StockEmptyError
+from utils.date_utils import time_str_convert
 
 
 def query_all_stock(pt) -> list:

@@ -7,9 +7,9 @@ import numpy as np
 import pandas as pd
 import mplfinance as mpf
 
-from my_stock_and_coin.config.plot_const import KWARGS
-from my_stock_and_coin.stock.indicator import cal_macd
-from my_stock_and_coin.stock.query import query_candlestick
+from config.plot_const import KWARGS
+from stock.indicator import cal_macd
+from stock.query import query_candlestick
 
 
 def plot_candlestick(gid, start_date, end_date, frequency, volume=False):
