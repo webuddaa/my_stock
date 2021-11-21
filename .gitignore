@@ -6,31 +6,19 @@
 **/__pycache__
 data/
 result/
-models/
-logs/
 */data/
 **/data/
 ***/data/
 ****/data/
 *****/data/
-*/dataset/
-**/dataset/
-***/dataset/
-****/dataset/
-*****/dataset/
 */.ipynb_checkpoints/
 **/.ipynb_checkpoints/
 ***/.ipynb_checkpoints/
 ****/.ipynb_checkpoints/
-*/*.zip
-**/*.zip
-***/*.zip
-****/*.zip
-*****/*.zip
 */*.csv
 **/*.csv
 ***/*.csv
-****/*.csvls
 *****/*.csv
+config/private_config.py
 
 

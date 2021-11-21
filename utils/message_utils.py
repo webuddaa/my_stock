@@ -9,7 +9,7 @@ import requests
 import zmail
 from typing import List
 
-from config.message_const import WEB_HOOK_KEY, EMAIL_ID, EMAIL_PASSWORD
+from config.private_config import PrivateConfig
 from exception.message_exception import SendMailException, SendWechatException
 
 
@@ -23,7 +23,7 @@ def my_send_mail(subject: str, content_text: str, to_addr: List[str] or str):
     mail_content = {'subject': subject, 'content_text': content_text}
     try:
         # 配置发送方的邮箱和密码
-        server = zmail.server(EMAIL_ID, EMAIL_PASSWORD)
+        server = zmail.server(PrivateConfig.EMAIL_ID, PrivateConfig.EMAIL_PASSWORD)
         is_success = server.send_mail(to_addr, mail_content)
         if is_success:
             print("send success")
@@ -37,7 +37,7 @@ def send_wechat_msg(content_text):
     """
     发送消息到企业微信的群中
     """
-    url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={WEB_HOOK_KEY}"
+    url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={PrivateConfig.WEB_HOOK_KEY}"
     headers = {"Content-Type": "application/json;charset=utf-8"}
     msg = {
         "msgtype": "text",

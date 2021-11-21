@@ -4,12 +4,14 @@
 @file_name: query.py
 """
 import baostock as bs
+import jqdatasdk as jq
 import pandas as pd
 from datetime import datetime, timedelta
 
 from config.baostock_const import CandlestickInterval
+from config.private_config import PrivateConfig
 from exception.stock_exception import StockEmptyError
-from utils.date_utils import time_str_convert
+from utils.date_utils import time_str_convert, str2datetime
 
 
 def query_all_stock(pt) -> list:
@@ -81,3 +83,28 @@ def query_candlestick(gid, start_date, end_date, frequency, flag="3") -> pd.Data
     data = df[cols]
     data.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
     return data
+
+
+def query_candlestick_from_jq(count, unit, end_date, security="000001.XSHG") -> pd.DataFrame:
+    """
+    从聚宽数据中获取上证指数的分钟级数据
+    unit: '1m' or '5m' or '15m' or '30m' or '60m'
+    end_date: "2008-11-01 09:30:00"
+    """
+    if not jq.is_auth():
+        jq.auth(PrivateConfig.JQ_USER_NAME, PrivateConfig.JQ_PASSWORD)
+
+    end_dt = str2datetime(end_date, rtype="second")
+    kwargs = {
+        "security": security,
+        "count": count,
+        "unit": unit,
+        "fields": ("date", "open", "high", "low", "close", "volume"),
+        "end_dt": end_dt
+    }
+
+    df = jq.get_bars(**kwargs)
+
+    df["date"] = df["date"].apply(lambda x: str(x)[:-3])
+    df.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
+    return df

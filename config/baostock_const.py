@@ -12,6 +12,7 @@ _S_LONG = "date,code,open,high,low,close,volume,amount,adjustflag,turn,pctChg"
 
 
 class CandlestickInterval:
+    MIN1 = "1"
     MIN5 = "5"
     MIN15 = "15"
     MIN30 = "30"
