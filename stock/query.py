@@ -7,6 +7,7 @@ import baostock as bs
 import pandas as pd
 from datetime import datetime, timedelta
 
+from config.baostock_const import CandlestickInterval
 from exception.stock_exception import StockEmptyError
 from utils.date_utils import time_str_convert
 
@@ -54,8 +55,12 @@ def query_candlestick(gid, start_date, end_date, frequency, flag="3") -> pd.Data
     :param flag: 复权类型，1：后复权；2：前复权；3：不复权
     """
     bs.login()
+
     base_fields = "date,open,close,high,low,volume"
-    fields = base_fields if frequency in ("d", "w", "m") else f"{base_fields},time"
+    if frequency in (CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MON):
+        fields = base_fields
+    else:
+        fields = f"{base_fields},time"
 
     rs = bs.query_history_k_data_plus(code=gid,
                                       fields=fields,
@@ -69,15 +74,10 @@ def query_candlestick(gid, start_date, end_date, frequency, flag="3") -> pd.Data
     if df.empty:
         raise StockEmptyError(f"{gid}股票数据为空")
 
-    if frequency in ("5", "15", "30", "60"):
+    if frequency in (CandlestickInterval.MIN5, CandlestickInterval.MIN15, CandlestickInterval.MIN30, CandlestickInterval.MIN60):
         df["date"] = df["time"].apply(lambda x: "%s-%s-%s %s:%s" % (x[: 4], x[4: 6], x[6: 8], x[8: 10], x[10: 12]))
     cols = ["date", "open", "high", "low", "close", "volume"]
     df[["open", "close", "high", "low", "volume"]] = df[["open", "close", "high", "low", "volume"]].astype(float)
     data = df[cols]
     data.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
     return data
-
-
-if __name__ == '__main__':
-    dd = query_candlestick("sz.300745", "20210401", "20210420", frequency="5")
-    dd.to_csv("../data/temp.csv", header=True, index=False)

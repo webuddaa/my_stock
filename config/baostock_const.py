@@ -10,12 +10,23 @@ _S_DAY = "date,code,open,high,low,close,preclose,volume,amount,adjustflag,turn,t
 
 _S_LONG = "date,code,open,high,low,close,volume,amount,adjustflag,turn,pctChg"
 
+
+class CandlestickInterval:
+    MIN5 = "5"
+    MIN15 = "15"
+    MIN30 = "30"
+    MIN60 = "60"
+    DAY = "d"
+    WEEK = "w"
+    MON = "m"
+
+
 frequency_map = {
-    '5': _S_MINUTE,
-    '15': _S_MINUTE,
-    '30': _S_MINUTE,
-    '60': _S_MINUTE,
-    'd': _S_DAY,
-    'w': _S_LONG,
-    'm': _S_LONG
+    CandlestickInterval.MIN5: _S_MINUTE,
+    CandlestickInterval.MIN15: _S_MINUTE,
+    CandlestickInterval.MIN30: _S_MINUTE,
+    CandlestickInterval.MIN60: _S_MINUTE,
+    CandlestickInterval.DAY: _S_DAY,
+    CandlestickInterval.WEEK: _S_LONG,
+    CandlestickInterval.MON: _S_LONG
 }
