@@ -8,7 +8,7 @@ import jqdatasdk as jq
 import pandas as pd
 from datetime import datetime, timedelta
 
-from config.baostock_const import CandlestickInterval
+from config.baostock_const import CandlestickInterval, Adjustment
 from config.private_config import PrivateConfig
 from exception.stock_exception import StockEmptyError
 from utils.date_utils import time_str_convert, str2datetime
@@ -47,19 +47,20 @@ def query_all_stock(pt) -> list:
     return list(df4["code"])
 
 
-def query_candlestick(gid, start_date, end_date, frequency, flag="3") -> pd.DataFrame:
+def query_candlestick(gid, start_date, end_date, frequency: CandlestickInterval,
+                      flag: Adjustment = Adjustment.NO_ADJUST) -> pd.DataFrame:
     """
     查询某只股票在一定的时间范围内的K线数据(http://baostock.com/baostock/index.php/)
     :param gid: sh.600519
     :param start_date: 20200409
     :param end_date: 20200410
     :param frequency: '5' or '15' or '30' or '60' or 'd' or 'w' or 'm'
-    :param flag: 复权类型，1：后复权；2：前复权；3：不复权
+    :param flag: 复权类型
     """
     bs.login()
 
     base_fields = "date,open,close,high,low,volume"
-    if frequency in (CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MON):
+    if frequency in (CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MONTH):
         fields = base_fields
     else:
         fields = f"{base_fields},time"
@@ -68,8 +69,8 @@ def query_candlestick(gid, start_date, end_date, frequency, flag="3") -> pd.Data
                                       fields=fields,
                                       start_date=time_str_convert(start_date),
                                       end_date=time_str_convert(end_date),
-                                      frequency=frequency,
-                                      adjustflag=flag)
+                                      frequency=frequency.value,
+                                      adjustflag=flag.value)
     df = rs.get_data()
     bs.logout()
 

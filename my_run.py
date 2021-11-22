@@ -18,7 +18,7 @@ def temp_plot_candlestick_from_bs():
     frequency = CandlestickInterval.MIN5
     save_path = f"./result/{gid}_{frequency}_candlestick.png"
 
-    data = query_candlestick(gid, start_date, end_date, frequency, flag="3")
+    data = query_candlestick(gid, start_date, end_date, frequency)
     data = cal_macd(data)
     plot_candlestick(data, save_path=save_path)
 
@@ -26,16 +26,16 @@ def temp_plot_candlestick_from_bs():
 def temp_plot_candlestick_from_jq():
     save_path = "./result/000001.XSHG_1m_candlestick.png"
     data = pd.read_csv("./data/000001.XSHG_1m_sticks.csv")
-    data = data[data.Date < "2005-01-06 11:30"]
     data = cal_macd(data)
+    data = data[(data.Date < "2007-06-05 11:30") & (data.Date > "2007-06-03 11:30")]
     plot_candlestick(data, save_path=save_path)
 
 
 def temp_query_candlestick_from_jq():
     security = "000001.XSHG"
     count = 1000000
-    unit = "5m"
-    end_date = "2008-11-01 15:00:00"
+    unit = "60m"
+    end_date = "2021-11-20 15:00:00"
     df = query_candlestick_from_jq(
         count=count,
         unit=unit,
@@ -45,4 +45,4 @@ def temp_query_candlestick_from_jq():
 
 
 if __name__ == '__main__':
-    temp_plot_candlestick_from_jq()
+    temp_plot_candlestick_from_bs()
