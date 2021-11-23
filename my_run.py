@@ -13,9 +13,9 @@ from stock.query import query_candlestick_from_jq, query_candlestick
 
 def temp_plot_candlestick_from_bs():
     gid = "sz.000002"
-    start_date = "20080401"
-    end_date = "20080420"
-    frequency = CandlestickInterval.MIN5
+    start_date = "20080101"
+    end_date = "20080920"
+    frequency = CandlestickInterval.DAY
     save_path = f"./result/{gid}_{frequency}_candlestick.png"
 
     data = query_candlestick(gid, start_date, end_date, frequency)

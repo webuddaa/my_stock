@@ -26,9 +26,35 @@ class CandlestickInterval(Enum):
 
 @unique
 class Adjustment(Enum):
-    POST_ADJUST = "1"  # 后复权
-    PRE_ADJUST = "2"  # 前复权
-    NO_ADJUST = "3"   # 不复权
+    POST_ADJUST = ("1", "后复权")
+    PRE_ADJUST = ("2", "前复权")
+    NO_ADJUST = ("3", "不复权")
+
+    def __init__(self, val: str, desc: str):
+        self.val = val
+        self.desc = desc
+
+    @classmethod
+    def values(cls):
+        return [ele.val for ele in cls]
+
+
+@unique
+class Field(Enum):
+    Date = ("Date", "日期")
+    Open = ("Open", "开盘价")
+    High = ("High", "最高价")
+    Low = ("Low", "最低价")
+    Close = ("Close", "收盘价")
+    Volume = ("Volume", "成交量")
+
+    def __init__(self, val: str, desc: str):
+        self.val = val
+        self.desc = desc
+
+    @classmethod
+    def values(cls):
+        return [ele.val for ele in cls]
 
 
 frequency_map = {
@@ -40,4 +66,3 @@ frequency_map = {
     CandlestickInterval.WEEK: _S_LONG,
     CandlestickInterval.MONTH: _S_LONG
 }
-

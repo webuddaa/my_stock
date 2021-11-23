@@ -70,7 +70,7 @@ def query_candlestick(gid, start_date, end_date, frequency: CandlestickInterval,
                                       start_date=time_str_convert(start_date),
                                       end_date=time_str_convert(end_date),
                                       frequency=frequency.value,
-                                      adjustflag=flag.value)
+                                      adjustflag=flag.val)
     df = rs.get_data()
     bs.logout()
 
