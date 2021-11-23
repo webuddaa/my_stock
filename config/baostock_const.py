@@ -34,10 +34,6 @@ class Adjustment(Enum):
         self.val = val
         self.desc = desc
 
-    @classmethod
-    def values(cls):
-        return [ele.val for ele in cls]
-
 
 @unique
 class Field(Enum):
@@ -47,6 +43,9 @@ class Field(Enum):
     Low = ("Low", "最低价")
     Close = ("Close", "收盘价")
     Volume = ("Volume", "成交量")
+    Diff = ("Diff", "白线")
+    Dea = ("Dea", "黄线")
+    Macd = ("Macd", "红绿柱子")
 
     def __init__(self, val: str, desc: str):
         self.val = val

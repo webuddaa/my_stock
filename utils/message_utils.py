@@ -20,7 +20,11 @@ def my_send_mail(subject: str, content_text: str, to_addr: List[str] or str):
     :param content_text: 邮件的内容
     :param to_addr: 指定的邮箱
     """
-    mail_content = {'subject': subject, 'content_text': content_text}
+    mail_content = {
+        "subject": subject,
+        "content_text": content_text,
+        "attachments": ""  # 附件的绝对路径
+    }
     try:
         # 配置发送方的邮箱和密码
         server = zmail.server(PrivateConfig.EMAIL_ID, PrivateConfig.EMAIL_PASSWORD)
@@ -35,7 +39,7 @@ def my_send_mail(subject: str, content_text: str, to_addr: List[str] or str):
 
 def send_wechat_msg(content_text):
     """
-    发送消息到企业微信的群中
+    发送消息到企业微信群中
     """
     url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={PrivateConfig.WEB_HOOK_KEY}"
     headers = {"Content-Type": "application/json;charset=utf-8"}
@@ -50,4 +54,4 @@ def send_wechat_msg(content_text):
 
 
 if __name__ == '__main__':
-    my_send_mail("hello", "good", "1284950402@qq.com")
+    my_send_mail("happy", "good", "xuxf5@yonghui.cn")

@@ -37,9 +37,9 @@ def cal_macd(data: pd.DataFrame, field: Field = Field.Close, short_length=12, lo
     exp1 = data[field.val].ewm(span=short_length, adjust=False).mean()
     exp2 = data[field.val].ewm(span=long_length, adjust=False).mean()
 
-    data["diff"] = exp1 - exp2  # 白线
-    data["dea"] = data["diff"].ewm(span=mid_length, adjust=False).mean()  # 黄线
-    data["macd"] = (data["diff"] - data["dea"]) * 2  # 红绿柱
+    data[Field.Diff.val] = exp1 - exp2  # 白线
+    data[Field.Dea.val] = data[Field.Diff.val].ewm(span=mid_length, adjust=False).mean()  # 黄线
+    data[Field.Macd.val] = (data[Field.Diff.val] - data[Field.Dea.val]) * 2  # 红绿柱
 
     return data
 
