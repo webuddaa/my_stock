@@ -11,10 +11,10 @@ from stock.my_plot import plot_candlestick
 from stock.query import query_candlestick_from_jq, query_candlestick
 
 
-def temp_plot_candlestick_from_bs():
-    gid = "sz.000002"
-    start_date = "20080101"
-    end_date = "20080920"
+def _test_plot_candlestick_from_bs():
+    gid = "sz.580002"
+    start_date = "20060101"
+    end_date = "20061123"
     frequency = CandlestickInterval.DAY
     save_path = f"./result/{gid}_{frequency}_candlestick.png"
 
@@ -23,15 +23,15 @@ def temp_plot_candlestick_from_bs():
     plot_candlestick(data, save_path=save_path)
 
 
-def temp_plot_candlestick_from_jq():
-    save_path = "./result/000001.XSHG_1m_candlestick.png"
-    data = pd.read_csv("./data/000001.XSHG_1m_sticks.csv")
+def _test_plot_candlestick_from_jq():
+    save_path = "./result/000001.XSHG_60m_candlestick.png"
+    data = pd.read_csv("./data/000001.XSHG_60m_sticks.csv")
     data = cal_macd(data)
-    data = data[(data.Date < "2007-06-05 11:30") & (data.Date > "2007-06-03 11:30")]
+    data = data[(data.Date < "2006-11-30 16:30") & (data.Date > "2006-01-03 11:30")]
     plot_candlestick(data, save_path=save_path)
 
 
-def temp_query_candlestick_from_jq():
+def _test_query_candlestick_from_jq():
     security = "000001.XSHG"
     count = 1000000
     unit = "60m"
@@ -45,4 +45,4 @@ def temp_query_candlestick_from_jq():
 
 
 if __name__ == '__main__':
-    temp_plot_candlestick_from_bs()
+    _test_plot_candlestick_from_jq()
