@@ -7,6 +7,7 @@
 import json
 import requests
 import zmail
+from loguru import logger
 from typing import List
 
 from config.private_config import PrivateConfig
@@ -30,11 +31,11 @@ def my_send_mail(subject: str, content_text: str, to_addr: List[str] or str):
         server = zmail.server(PrivateConfig.EMAIL_ID, PrivateConfig.EMAIL_PASSWORD)
         is_success = server.send_mail(to_addr, mail_content)
         if is_success:
-            print("send success")
+            logger.info("send email success")
         else:
-            print("send fail")
+            logger.info("send email fail")
     except SendMailException as e:
-        print("send fail")
+        logger.info("send email fail")
 
 
 def send_wechat_msg(content_text):
@@ -43,6 +44,7 @@ def send_wechat_msg(content_text):
     """
     url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={PrivateConfig.WEB_HOOK_KEY}"
     headers = {"Content-Type": "application/json;charset=utf-8"}
+
     msg = {
         "msgtype": "text",
         "text": {"content": content_text}
@@ -50,8 +52,4 @@ def send_wechat_msg(content_text):
     try:
         requests.post(url, data=json.dumps(msg), headers=headers)
     except SendWechatException as e:
-        print("send wechat fail")
-
-
-if __name__ == '__main__':
-    my_send_mail("happy", "good", "xuxf5@yonghui.cn")
+        logger.info("send wechat fail")

@@ -4,6 +4,7 @@
 @file_name: my_run.py
 """
 import pandas as pd
+from loguru import logger
 
 from config.baostock_const import CandlestickInterval
 from stock.indicator import cal_macd
@@ -41,6 +42,7 @@ def _test_plot_candlestick_from_jq():
     data = cal_macd(data)
     data = data[(data.Date < "2006-11-30 16:30") & (data.Date > "2006-01-03 11:30")]
     plot_candlestick(data, save_path=save_path)
+    logger.info("成功保存K线图")
 
 
 def _test_query_candlestick_from_jq():
@@ -57,7 +59,9 @@ def _test_query_candlestick_from_jq():
         end_date=end_date)
 
     df.to_csv(f"./data/{security}_{unit}_sticks.csv", header=True, index=False)
+    logger.info("成功写入csv文件")
 
 
 if __name__ == '__main__':
+    logger.add("./runtime.log", level="INFO")
     _test_plot_candlestick_from_jq()

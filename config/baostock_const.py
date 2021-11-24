@@ -12,6 +12,16 @@ _S_DAY = "date,code,open,high,low,close,preclose,volume,amount,adjustflag,turn,t
 _S_LONG = "date,code,open,high,low,close,volume,amount,adjustflag,turn,pctChg"
 
 
+class BaseEnum(Enum):
+    def __init__(self, val: str, desc: str):
+        self.val = val
+        self.desc = desc
+
+    @classmethod
+    def values(cls):
+        return [ele.val for ele in cls]
+
+
 @unique
 class CandlestickInterval(Enum):
     MIN1 = "1"
@@ -25,18 +35,14 @@ class CandlestickInterval(Enum):
 
 
 @unique
-class Adjustment(Enum):
+class Adjustment(BaseEnum):
     POST_ADJUST = ("1", "后复权")
     PRE_ADJUST = ("2", "前复权")
     NO_ADJUST = ("3", "不复权")
 
-    def __init__(self, val: str, desc: str):
-        self.val = val
-        self.desc = desc
-
 
 @unique
-class Field(Enum):
+class Field(BaseEnum):
     Date = ("Date", "日期")
     Open = ("Open", "开盘价")
     High = ("High", "最高价")
@@ -46,14 +52,6 @@ class Field(Enum):
     Diff = ("Diff", "白线")
     Dea = ("Dea", "黄线")
     Macd = ("Macd", "红绿柱子")
-
-    def __init__(self, val: str, desc: str):
-        self.val = val
-        self.desc = desc
-
-    @classmethod
-    def values(cls):
-        return [ele.val for ele in cls]
 
 
 frequency_map = {
