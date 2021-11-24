@@ -14,7 +14,7 @@ from exception.stock_exception import StockEmptyError
 from utils.date_utils import time_str_convert, str2datetime
 
 
-def query_all_stock(pt) -> list:
+def query_all_stock(pt) -> pd.DataFrame:
     """
     获取当前日期所有的股票，数据中包含的字段：
     code：证券代码，sh.600000
@@ -44,7 +44,8 @@ def query_all_stock(pt) -> list:
               & (df3["status"] == '1')
               & (df3["isST"] == "false")
               & (df3["ipoDate"] < temp_date)]
-    return list(df4["code"])
+    df5 = df4[["code", "code_name", "ipoDate"]]
+    return df5
 
 
 def query_candlestick(gid, start_date, end_date, frequency: CandlestickInterval,
@@ -109,3 +110,4 @@ def query_candlestick_from_jq(count, unit, end_date, security="000001.XSHG") -> 
     df["date"] = df["date"].apply(lambda x: str(x)[:-3])
     df.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
     return df
+

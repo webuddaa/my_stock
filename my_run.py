@@ -8,10 +8,19 @@ import pandas as pd
 from config.baostock_const import CandlestickInterval
 from stock.indicator import cal_macd
 from stock.my_plot import plot_candlestick
-from stock.query import query_candlestick_from_jq, query_candlestick
+from stock.query import query_candlestick_from_jq, query_candlestick, query_all_stock
+
+
+def _test_query_all_stock():
+    pt = "20211124"
+    df = query_all_stock(pt)
+    df.to_csv(f"./data/all_gid_{pt}.csv", header=True, index=False)
 
 
 def _test_plot_candlestick_from_bs():
+    """
+    绘制任意股票的K线图
+    """
     gid = "sz.580002"
     start_date = "20060101"
     end_date = "20061123"
@@ -24,6 +33,9 @@ def _test_plot_candlestick_from_bs():
 
 
 def _test_plot_candlestick_from_jq():
+    """
+    绘制上证指数的K线图
+    """
     save_path = "./result/000001.XSHG_60m_candlestick.png"
     data = pd.read_csv("./data/000001.XSHG_60m_sticks.csv")
     data = cal_macd(data)
@@ -32,6 +44,9 @@ def _test_plot_candlestick_from_jq():
 
 
 def _test_query_candlestick_from_jq():
+    """
+    从聚宽平台拉取上证指数的分钟级数据
+    """
     security = "000001.XSHG"
     count = 1000000
     unit = "60m"
