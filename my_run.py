@@ -16,13 +16,14 @@ def _test_query_all_stock():
     pt = "20211124"
     df = query_all_stock(pt)
     df.to_csv(f"./data/all_gid_{pt}.csv", header=True, index=False)
+    logger.info(f"[all_gid_{pt}.csv]保存完成")
 
 
 def _test_plot_candlestick_from_bs():
     """
     绘制任意股票的K线图
     """
-    gid = "sz.580002"
+    gid = "sh.600000"
     start_date = "20060101"
     end_date = "20061123"
     frequency = CandlestickInterval.DAY
@@ -31,6 +32,7 @@ def _test_plot_candlestick_from_bs():
     data = query_candlestick(gid, start_date, end_date, frequency)
     data = cal_macd(data)
     plot_candlestick(data, save_path=save_path)
+    logger.info(f"[{gid}_{frequency}] save success")
 
 
 def _test_plot_candlestick_from_jq():
@@ -63,5 +65,5 @@ def _test_query_candlestick_from_jq():
 
 
 if __name__ == '__main__':
-    logger.add("./runtime.log", level="INFO")
-    _test_plot_candlestick_from_jq()
+    logger.add("./frank.log", level="INFO")
+    _test_plot_candlestick_from_bs()

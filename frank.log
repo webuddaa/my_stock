@@ -1,0 +1,3 @@
+2021-11-25 11:03:54.058 | INFO     | utils.message_utils:my_send_mail:34 - send email success
+2021-11-26 07:44:33.051 | INFO     | __main__:_test_plot_candlestick_from_bs:35 - sh.600000_CandlestickInterval.DAYK save success
+2021-11-26 07:45:06.527 | INFO     | __main__:_test_plot_candlestick_from_bs:35 - [sh.600000_CandlestickInterval.DAY] save success
