@@ -52,9 +52,9 @@ def cal_bollinger_bands(data: pd.DataFrame, field: Field = Field.Close, n=20, p=
     :param n:
     :param p:
     """
-    data[f"boll_{field.val}_mean"] = data[field.val].rolling(window=n).mean()
-    data[f"{field.val}_std"] = data[field.val].rolling(window=n).std(ddof=0)
-    data[f"boll_{field.val}_up"] = data[f"boll_{field.val}_mean"] + p * data[f"{field}_std"]
-    data[f"boll_{field.val}_down"] = data[f"boll_{field.val}_mean"] - p * data[f"{field}_std"]
-    data.drop([f"boll_{field.val}_mean"], axis=1, inplace=True)
+    data["boll_mean"] = data[field.val].rolling(window=n).mean()
+    data["temp_std"] = data[field.val].rolling(window=n).std(ddof=0)
+    data[f"boll_up"] = data[f"boll_mean"] + p * data["temp_std"]
+    data[f"boll_down"] = data[f"boll_mean"] - p * data["temp_std"]
+    data.drop(["temp_std"], axis=1, inplace=True)
     return data
