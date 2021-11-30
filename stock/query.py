@@ -25,7 +25,7 @@ def query_all_stock(pt) -> pd.DataFrame:
     type：证券类型（1：股票，2：指数,3：其它）
     status：上市状态（1：上市，0：退市）
     -------------------------
-    :param pt: 20211118
+    :param pt: 20211118，必须是交易日
     """
     day = time_str_convert(pt)
     temp_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")

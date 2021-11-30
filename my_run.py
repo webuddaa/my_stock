@@ -10,10 +10,12 @@ from config.baostock_const import CandlestickInterval
 from stock.indicator import cal_macd
 from stock.my_plot import plot_candlestick
 from stock.query import query_candlestick_from_jq, query_candlestick, query_all_stock
+from utils.extra_utils import cal_runtime
 
 
+@cal_runtime
 def _test_query_all_stock():
-    pt = "20211124"
+    pt = "20211126"
     df = query_all_stock(pt)
     df.to_csv(f"./data/all_gid_{pt}.csv", header=True, index=False)
     logger.info(f"[all_gid_{pt}.csv]保存完成")
@@ -35,6 +37,7 @@ def _test_plot_candlestick_from_bs():
     logger.info(f"[{gid}_{frequency}] save success")
 
 
+@cal_runtime
 def _test_plot_candlestick_from_jq():
     """
     绘制上证指数的K线图
@@ -66,4 +69,4 @@ def _test_query_candlestick_from_jq():
 
 if __name__ == '__main__':
     logger.add("./frank.log", level="INFO")
-    _test_plot_candlestick_from_bs()
+    _test_query_all_stock()

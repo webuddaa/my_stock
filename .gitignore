@@ -8,5 +8,6 @@ data/
 result/
 */.ipynb_checkpoints/
 config/private_config.py
+*.log
 
 
