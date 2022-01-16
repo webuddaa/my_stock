@@ -26,17 +26,16 @@ def _test_plot_candlestick_from_bs():
     """
     绘制任意股票的K线图
     """
-    gid = "sh.600519"
-    start_date = "20200101"
-    end_date = "20211130"
-    frequency = CandlestickInterval.DAY
+    gid = "sz.002051"
+    start_date = "20060620"
+    end_date = "20060728"
+    frequency = CandlestickInterval.MIN60
     save_path = f"./result/{gid}_{frequency}_candlestick.png"
 
     data = query_candlestick(gid, start_date, end_date, frequency)
     data = cal_macd(data)
-    # plot_candlestick(data, save_path=save_path)
-    # logger.info(f"[{gid}_{frequency}] save success")
-    data.to_csv("./data/600519.csv", header=True, index=False)
+    plot_candlestick(data, save_path=save_path)
+    logger.info(f"[{gid}_{frequency}] save success")
 
 
 @cal_runtime
@@ -70,5 +69,4 @@ def _test_query_candlestick_from_jq():
 
 
 if __name__ == '__main__':
-    logger.add("./frank.log", level="INFO")
     _test_plot_candlestick_from_bs()

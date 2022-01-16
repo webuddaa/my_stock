@@ -4,7 +4,6 @@
 /__pycache__
 */__pycache__
 **/__pycache__
-data/
 result/
 */.ipynb_checkpoints/
 config/private_config.py

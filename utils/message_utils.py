@@ -14,28 +14,31 @@ from config.private_config import PrivateConfig
 from exception.message_exception import SendMailException, SendWechatException
 
 
-def my_send_mail(subject: str, content_text: str, to_addr: List[str] or str):
+def my_send_email(subject: str, content: str, recipients: List[str] or str, content_type="text"):
     """
     发送邮件到指定的邮箱
     :param subject: 邮件的主题
-    :param content_text: 邮件的内容
-    :param to_addr: 指定的邮箱
+    :param content: 邮件的内容
+    :param recipients: 指定的邮箱
+    :param content_type:
     """
+    if content_type not in ("text", "html"):
+        raise ValueError("文本类型错误")
     mail_content = {
         "subject": subject,
-        "content_text": content_text,
+        f"content_{content_type}": content,
         "attachments": ""  # 附件的绝对路径
     }
     try:
         # 配置发送方的邮箱和密码
         server = zmail.server(PrivateConfig.EMAIL_ID, PrivateConfig.EMAIL_PASSWORD)
-        is_success = server.send_mail(to_addr, mail_content)
+        is_success = server.send_mail(recipients, mail_content)
         if is_success:
             logger.info("send email success")
         else:
             logger.info("send email fail")
     except SendMailException as e:
-        logger.info("send email fail")
+        logger.exception(f"send email fail, error info: {e}")
 
 
 def send_wechat_msg(content_text):
@@ -52,4 +55,5 @@ def send_wechat_msg(content_text):
     try:
         requests.post(url, data=json.dumps(msg), headers=headers)
     except SendWechatException as e:
-        logger.info("send wechat fail")
+        logger.info(f"send wechat fail, error info: {e}")
+
