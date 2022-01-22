@@ -6,7 +6,7 @@
 import pandas as pd
 from loguru import logger
 
-from config.baostock_const import CandlestickInterval
+from config.baostock_const import CandlestickInterval, Adjustment
 from stock.indicator import cal_macd
 from stock.my_plot import plot_candlestick
 from stock.query import query_candlestick_from_jq, query_candlestick, query_all_stock
@@ -26,13 +26,13 @@ def _test_plot_candlestick_from_bs():
     """
     绘制任意股票的K线图
     """
-    gid = "sz.002051"
-    start_date = "20060620"
-    end_date = "20060728"
-    frequency = CandlestickInterval.MIN60
+    gid = "sh.600162"
+    start_date = "20050401"
+    end_date = "20050731"
+    frequency = CandlestickInterval.DAY
     save_path = f"./result/{gid}_{frequency}_candlestick.png"
 
-    data = query_candlestick(gid, start_date, end_date, frequency)
+    data = query_candlestick(gid, start_date, end_date, frequency, flag=Adjustment.NO_ADJUST)
     data = cal_macd(data)
     plot_candlestick(data, save_path=save_path)
     logger.info(f"[{gid}_{frequency}] save success")
