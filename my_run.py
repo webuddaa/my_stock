@@ -26,10 +26,10 @@ def _test_plot_candlestick_from_bs():
     """
     绘制任意股票的K线图
     """
-    gid = "sh.600162"
-    start_date = "20050401"
-    end_date = "20050731"
-    frequency = CandlestickInterval.DAY
+    gid = "sh.601588"
+    start_date = "20061115"
+    end_date = "20061215"
+    frequency = CandlestickInterval.MIN30
     save_path = f"./result/{gid}_{frequency}_candlestick.png"
 
     data = query_candlestick(gid, start_date, end_date, frequency, flag=Adjustment.NO_ADJUST)
