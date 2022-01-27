@@ -10,6 +10,7 @@ from config.baostock_const import CandlestickInterval, Adjustment
 from stock.indicator import cal_macd
 from stock.my_plot import plot_candlestick
 from stock.query import query_candlestick_from_jq, query_candlestick, query_all_stock
+from utils.date_utils import MyDateProcess, DateFormat
 from utils.extra_utils import cal_runtime
 
 
@@ -21,16 +22,40 @@ def _test_query_all_stock():
     logger.info(f"[all_gid_{pt}.csv]保存完成")
 
 
+def cal_date_section(mid_date: str, frequency: CandlestickInterval):
+    if frequency == CandlestickInterval.MIN5:
+        start_date = MyDateProcess.add_delta(mid_date, -6, output_format=DateFormat.DAY)
+        end_date = MyDateProcess.add_delta(mid_date, 1, output_format=DateFormat.DAY)
+        return start_date, end_date
+
+    if frequency == CandlestickInterval.MIN15:
+        start_date = MyDateProcess.add_delta(mid_date, -18, output_format=DateFormat.DAY)
+        end_date = MyDateProcess.add_delta(mid_date, 5, output_format=DateFormat.DAY)
+        return start_date, end_date
+
+    if frequency == CandlestickInterval.MIN30:
+        start_date = MyDateProcess.add_delta(mid_date, -36, output_format=DateFormat.DAY)
+        end_date = MyDateProcess.add_delta(mid_date, 11, output_format=DateFormat.DAY)
+        return start_date, end_date
+
+    if frequency == CandlestickInterval.MIN60:
+        start_date = MyDateProcess.add_delta(mid_date, -72, output_format=DateFormat.DAY)
+        end_date = MyDateProcess.add_delta(mid_date, 23, output_format=DateFormat.DAY)
+        return start_date, end_date
+
+    if frequency == CandlestickInterval.DAY:
+        start_date = MyDateProcess.add_delta(mid_date, -300, output_format=DateFormat.DAY)
+        end_date = MyDateProcess.add_delta(mid_date, 99, output_format=DateFormat.DAY)
+        return start_date, end_date
+
+
 @cal_runtime
-def _test_plot_candlestick_from_bs():
+def _test_plot_candlestick_from_bs(gid, mid_date, frequency: CandlestickInterval):
     """
     绘制任意股票的K线图
     """
-    gid = "sh.601588"
-    start_date = "20061115"
-    end_date = "20061215"
-    frequency = CandlestickInterval.MIN30
-    save_path = f"./result/{gid}_{frequency}_candlestick.png"
+    save_path = f"./result/{gid}_{frequency}_candlestick_{mid_date}.png"
+    start_date, end_date = cal_date_section(mid_date, frequency)
 
     data = query_candlestick(gid, start_date, end_date, frequency, flag=Adjustment.NO_ADJUST)
     data = cal_macd(data)
@@ -69,4 +94,7 @@ def _test_query_candlestick_from_jq():
 
 
 if __name__ == '__main__':
-    _test_plot_candlestick_from_bs()
+    gid = "sh.600177"
+    mid_date = "20060821"
+    frequency = CandlestickInterval.MIN15
+    _test_plot_candlestick_from_bs(gid, mid_date, frequency)

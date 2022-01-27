@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from config.baostock_const import CandlestickInterval, Adjustment
 from config.private_config import PrivateConfig
 from exception.stock_exception import StockEmptyError
-from utils.date_utils import time_str_convert, str2datetime
+from utils.date_utils import MyDateProcess
 
 
 def query_all_stock(pt) -> pd.DataFrame:
@@ -27,7 +27,7 @@ def query_all_stock(pt) -> pd.DataFrame:
     -------------------------
     :param pt: 20211118，必须是交易日
     """
-    day = time_str_convert(pt)
+    day = MyDateProcess.convert_to_day_line(pt)
     temp_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
     bs.login()
     rs1 = bs.query_all_stock(day=day)
@@ -68,8 +68,8 @@ def query_candlestick(gid, start_date, end_date, frequency: CandlestickInterval,
 
     rs = bs.query_history_k_data_plus(code=gid,
                                       fields=fields,
-                                      start_date=time_str_convert(start_date),
-                                      end_date=time_str_convert(end_date),
+                                      start_date=MyDateProcess.convert_to_day_line(start_date),
+                                      end_date=MyDateProcess.convert_to_day_line(end_date),
                                       frequency=frequency.value,
                                       adjustflag=flag.val)
     df = rs.get_data()
@@ -96,7 +96,7 @@ def query_candlestick_from_jq(count, unit, end_date, security="000001.XSHG") -> 
     if not jq.is_auth():
         jq.auth(PrivateConfig.JQ_USER_NAME, PrivateConfig.JQ_PASSWORD)
 
-    end_dt = str2datetime(end_date, rtype="second")
+    end_dt = MyDateProcess.str2datetime(end_date)
     kwargs = {
         "security": security,
         "count": count,
