@@ -17,11 +17,6 @@ pd.set_option('mode.chained_assignment', None)
 
 
 def cal_date_section(start_date: str, frequency: CandlestickInterval):
-    if frequency == CandlestickInterval.MIN1:
-        # 仅限指数，暂不支持股票
-        temp_start_date = MyDateProcess.add_delta(start_date, -1, output_format=DateFormat.DAY_LINE)
-        return temp_start_date
-
     if frequency == CandlestickInterval.MIN5:
         temp_start_date = MyDateProcess.add_delta(start_date, -6, output_format=DateFormat.DAY_LINE)
         return temp_start_date
@@ -96,8 +91,10 @@ def get_candlestick_from_jq():
 
 
 if __name__ == '__main__':
+    # 获取某只股票的分钟级K线图
     # plot_candlestick_for_stock("sz.002594", "2022-01-04", "2022-01-29", CandlestickInterval.MIN30)
 
+    # 获取上证指数分钟级的K线图
     plot_candlestick_for_index("2019-08-22 10:30", CandlestickInterval.MIN5)
 
 
