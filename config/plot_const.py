@@ -23,8 +23,8 @@ _MY_STYLE = mpf.make_mpf_style(
 KWARGS = {
     "type": "candle",
     # "mav": (5, 10),
-    "figratio": (12, 8),
-    "figscale": 5,
+    "figratio": (20, 12),
+    "figscale": 10,
     "main_panel": 0,
     "volume_panel": 2,
     "show_nontrading": False,

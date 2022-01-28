@@ -19,8 +19,6 @@ def plot_candlestick(data: pd.DataFrame, save_path: str, volume=False):
     data[Field.Date.val] = pd.to_datetime(data[Field.Date.val])
     # 将日期列作为行索引
     data.set_index([Field.Date.val], inplace=True)
-    # 最多展示500根K线，超过200根就会有macd的柱子丢失
-    data = data.iloc[-200:]
     aa = np.array(data[Field.Macd.val])
     aa[aa < 0] = None
     macd_positive = aa
@@ -33,8 +31,8 @@ def plot_candlestick(data: pd.DataFrame, save_path: str, volume=False):
     add_plot = [
         mpf.make_addplot(macd_positive, type='bar', width=0.1, panel=1, color='red'),
         mpf.make_addplot(macd_negative, type='bar', width=0.1, panel=1, color='green'),
-        mpf.make_addplot(data[Field.Diff.val], type='line', width=0.8, panel=1, color='dimgrey', secondary_y=False),
-        mpf.make_addplot(data[Field.Dea.val], type='line', width=0.8, panel=1, color='orange', secondary_y=False),
+        mpf.make_addplot(data[Field.Diff.val], type='line', width=1.2, panel=1, color='dimgrey', secondary_y=False),
+        mpf.make_addplot(data[Field.Dea.val], type='line', width=1.2, panel=1, color='orange', secondary_y=False),
     ]
 
     mpf.plot(data, **KWARGS, addplot=add_plot, volume=volume, savefig=save_path)
