@@ -51,8 +51,8 @@ def query_candlestick(gid, start_date, end_date, frequency: CandlestickInterval,
     """
     查询某只股票在一定的时间范围内的K线数据(http://baostock.com/baostock/index.php/)
     :param gid: sh.600519
-    :param start_date: 20200409
-    :param end_date: 20200410
+    :param start_date: 2020-04-09
+    :param end_date: 2020-04-10
     :param frequency: '5' or '15' or '30' or '60' or 'd' or 'w' or 'm'
     :param flag: 复权类型
     """

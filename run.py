@@ -49,12 +49,12 @@ def get_all_stock(pt):
     logger.info(f"[all_gid_{pt}.csv]保存完成")
 
 
-def plot_candlestick_for_stock(gid, start_date, end_date, frequency: CandlestickInterval):
+def plot_candlestick_for_stock(gid, start_date, end_date, frequency: CandlestickInterval, flag=Adjustment.NO_ADJUST):
     """绘制任意股票的K线图"""
     save_path = f"./result/{gid}_{frequency.value}m_{start_date}_{end_date}.png"
     temp_start_date = cal_date_section(start_date, frequency)
 
-    data = query_candlestick(gid, temp_start_date, end_date, frequency, flag=Adjustment.NO_ADJUST)
+    data = query_candlestick(gid, temp_start_date, end_date, frequency, flag=flag)
     data = cal_macd(data)
     data = data[data["Date"] > start_date]
     plot_candlestick(data, save_path=save_path)
@@ -92,24 +92,8 @@ def get_candlestick_from_jq():
 
 if __name__ == '__main__':
     # 获取某只股票的分钟级K线图
-    # plot_candlestick_for_stock("sz.002594", "2022-01-04", "2022-01-29", CandlestickInterval.MIN30)
+    plot_candlestick_for_stock("sz.000767", "2006-12-01", "2007-01-04", CandlestickInterval.MIN30)
 
     # 获取上证指数分钟级的K线图
-    plot_candlestick_for_index("2019-08-22 10:30", CandlestickInterval.MIN5)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # plot_candlestick_for_index("2019-08-22 10:30", CandlestickInterval.MIN5)
 

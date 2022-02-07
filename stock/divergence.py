@@ -22,24 +22,22 @@ class Divergence:
     def merge_macd(self):
         self.data["target"] = self.data[Field.Macd.val].apply(lambda x: 1 if x >= 0 else -1)
         self.data["target2"] = self.data["target"].shift(1)  # 向下移动1个单位
-        self.data["my_date"] = self.data.apply(lambda row: row[Field.Date.val] if row["target"] + row["target2"] == 0 else None,
-                                               axis=1)
+        self.data["macd_abs"] = self.data[Field.Macd.val].apply(abs)
+        self.data["my_date"] = self.data.apply(
+            lambda row: row[Field.Date.val] if row["target"] + row["target2"] == 0 else None,
+            axis=1)
         self.data = self.data.fillna(method="ffill")  # 用缺失值前面的一个值代替缺失值
-        self.data["temp_low"] = self.data["low"].shift(5)
-        self.data["temp_high"] = self.data["high"].shift(5)
         self.data = self.data.dropna()
 
         self.data = self.data.groupby(["my_date"]).agg({
-            "macd": ["sum", "max", "min"],
-            "DIFF": ["max", "min"],
-            "DEA": ["max", "min"],
-            "temp_low": ["min"],
-            "temp_high": ["max"]
+            Field.Macd.val: ["sum"],
+            "macd_abs": ["sum", "max", "min"],
+            Field.Diff.val: ["max", "min"],
+            Field.Dea.val: ["max", "min"]
         }).reset_index()
 
-        self.data.columns = [
-            'my_date', 'macd_sum', 'macd_max', 'macd_min',
-            'DIFF_max', 'DIFF_min', 'DEA_max', 'DEA_min', 'low_min', 'high_max']
+        self.data.columns = ['my_date', 'macd_sum', 'macd_abs_sum', 'macd_abs_max', 'macd_abs_min',
+                             'DIFF_max', 'DIFF_min', 'DEA_max', 'DEA_min']
 
     def tendency_strength_mean(self):
         """
@@ -59,28 +57,19 @@ class Divergence:
         temp_df.columns = ["my_date", "mean_tendency_strength"]
         return temp_df
 
-    def bottom_divergence(self):
+    def bottom_divergence(self) -> bool:
         """
         底背驰
         """
-        if self.data.shape[0] < 5:
-            # 上市时间较短
-            return False
-
-        if self.data.iloc[-1]["macd_sum"] >= 0:
+        if self.data.iloc[-1]["macd_sum"] > 0:
             # 最近时间处于红柱子
             return False
+        macd_sum_a = self.data.iloc[-3]["macd_abs_sum"]
+        macd_sum_c = self.data.iloc[-1]["macd_abs_sum"]
 
-        macd_sum_a = self.data.iloc[-3]["macd_sum"]
-        macd_sum_c = self.data.iloc[-1]["macd_sum"]
-
-        diff_a = min(self.data.iloc[-3]["DIFF_min"], self.data.iloc[-2]["DIFF_min"])
-        diff_b = max(self.data.iloc[-1]["DIFF_max"], self.data.iloc[-2]["DIFF_max"])
-        diff_c = self.data.iloc[-1]["DIFF_min"]
-
-        dea_a = min(self.data.iloc[-3]["DEA_min"], self.data.iloc[-2]["DEA_min"])
-        dea_b = max(self.data.iloc[-1]["DEA_max"], self.data.iloc[-2]["DEA_max"])
-        dea_c = self.data.iloc[-1]["DEA_min"]
+        if macd_sum_c < macd_sum_a and self.data.iloc[-3]["DIFF_min"] < self.data.iloc[-1]["DIFF_min"]:
+            return True
+        return False
 
     def peak_divergence(self):
         """
