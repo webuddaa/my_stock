@@ -46,7 +46,7 @@ def query_all_stock(pt) -> pd.DataFrame:
     return df5
 
 
-def query_candlestick(gid, start_date, end_date, frequency: CandlestickInterval,
+def query_candlestick(bs, gid, start_date, end_date, frequency: CandlestickInterval,
                       flag: Adjustment = Adjustment.NO_ADJUST) -> pd.DataFrame:
     """
     查询某只股票在一定的时间范围内的K线数据(http://baostock.com/baostock/index.php/)
@@ -56,8 +56,6 @@ def query_candlestick(gid, start_date, end_date, frequency: CandlestickInterval,
     :param frequency: '5' or '15' or '30' or '60' or 'd' or 'w' or 'm'
     :param flag: 复权类型
     """
-    bs.login()
-
     base_fields = "date,open,close,high,low,volume"
     if frequency in (CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MONTH):
         fields = base_fields
@@ -71,14 +69,17 @@ def query_candlestick(gid, start_date, end_date, frequency: CandlestickInterval,
                                       frequency=frequency.value,
                                       adjustflag=flag.val)
     df = rs.get_data()
-    bs.logout()
 
     if df.empty:
+        raise StockEmptyError(f"{gid}股票数据为空")
+    df = df[(df["open"] != '') & (df["close"] != '') & (df["high"] != '') & (df["low"] != '') & (df["volume"] != '')]
+    if df.shape[0] == 0:
         raise StockEmptyError(f"{gid}股票数据为空")
 
     if frequency in (CandlestickInterval.MIN5, CandlestickInterval.MIN15, CandlestickInterval.MIN30, CandlestickInterval.MIN60):
         df["date"] = df["time"].apply(lambda x: "%s-%s-%s %s:%s" % (x[: 4], x[4: 6], x[6: 8], x[8: 10], x[10: 12]))
     cols = ["date", "open", "high", "low", "close", "volume"]
+
     df[["open", "close", "high", "low", "volume"]] = df[["open", "close", "high", "low", "volume"]].astype(float)
     data = df[cols]
     data.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
