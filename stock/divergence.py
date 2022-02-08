@@ -64,10 +64,14 @@ class Divergence:
         if self.data.iloc[-1]["macd_sum"] > 0:
             # 最近时间处于红柱子
             return False
+        if self.data.iloc[-1]["DIFF_min"] > 0:
+            # 最近时间的黄白线在0轴上方
+            return False
+
         macd_sum_a = self.data.iloc[-3]["macd_abs_sum"]
         macd_sum_c = self.data.iloc[-1]["macd_abs_sum"]
 
-        if macd_sum_c < macd_sum_a and self.data.iloc[-3]["DIFF_min"] < self.data.iloc[-1]["DIFF_min"]:
+        if macd_sum_c < macd_sum_a and self.data.iloc[-3]["DIFF_min"] < self.data.iloc[-1]["DIFF_min"] and self.data.iloc[-1]["macd_abs_max"] < self.data.iloc[-3]["macd_abs_max"]:
             return True
         return False
 

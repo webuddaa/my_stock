@@ -49,7 +49,7 @@ def select_stock_by_divergence(bs, all_stock_list, frequency) -> list:
             if divergence.bottom_divergence():
                 result.append(gid)
             if index % 50 == 0:
-                logger.info(f"index={index}".center(50, "*"))
+                logger.info(f"[index={index}]".center(40, "*"))
         except Exception as e:
             logger.exception(e)
             continue
@@ -61,12 +61,12 @@ if __name__ == '__main__':
     # logger.add(f"{args.path}/log_files/run_offline_fea_data.log", retention='10 days')
 
     all_stock_df = pd.read_csv("./data/all_gid_2022-01-28.csv")
-    all_stock_list = list(all_stock_df["code"])
+    all_stock_list = list(filter(lambda x: x.split(".")[1][:3] != "688", list(all_stock_df["code"])))
     bs.login()
 
     logger.info("开始搜索日线级别背驰的股票")
     res_day_list = select_stock_by_divergence(bs, all_stock_list, CandlestickInterval.DAY)
-    logger.info("完成搜索日线级别背驰的股票".center(50, "*"))
+    logger.info("完成搜索日线级别背驰的股票".center(40, "*"))
     logger.info(f"【日线级别背驰的股票】: {res_day_list}")
     send_wechat_msg(f"【日线级别背驰的股票】: {res_day_list}")
 
