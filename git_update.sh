@@ -1,5 +1,5 @@
 git add -A .
 
-git commit -m "修复shell脚本"
+git commit -m "调整代码结构"
 
 git push origin feature-v1
