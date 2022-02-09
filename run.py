@@ -5,13 +5,14 @@
 """
 from loguru import logger
 import pandas as pd
+import baostock as bs
 
 from config.baostock_const import CandlestickInterval, Adjustment
+from stock.divergence import Divergence
 from stock.indicator import cal_macd
 from stock.my_plot import plot_candlestick
 from stock.query import query_candlestick, query_all_stock
 from utils.date_utils import MyDateProcess, DateFormat
-
 
 pd.set_option('mode.chained_assignment', None)
 
@@ -49,12 +50,13 @@ def get_all_stock(pt):
     logger.info(f"[all_gid_{pt}.csv]保存完成")
 
 
-def plot_candlestick_for_stock(gid, start_date, end_date, frequency: CandlestickInterval, flag=Adjustment.NO_ADJUST):
+def plot_candlestick_for_stock(bs, gid, start_date, end_date, frequency: CandlestickInterval,
+                               flag=Adjustment.NO_ADJUST):
     """绘制任意股票的K线图"""
     save_path = f"./result/{gid}_{frequency.value}m_{start_date}_{end_date}.png"
     temp_start_date = cal_date_section(start_date, frequency)
 
-    data = query_candlestick(gid, temp_start_date, end_date, frequency, flag=flag)
+    data = query_candlestick(bs, gid, temp_start_date, end_date, frequency, flag=flag)
     data = cal_macd(data)
     data = data[data["Date"] > start_date]
     plot_candlestick(data, save_path=save_path)
@@ -91,9 +93,21 @@ def plot_candlestick_for_index(mid_date, frequency: CandlestickInterval, index="
 
 
 if __name__ == '__main__':
-    # 获取某只股票的分钟级K线图
-    plot_candlestick_for_stock("sz.000767", "2006-12-01", "2007-01-04", CandlestickInterval.MIN30)
-
-    # 获取上证指数分钟级的K线图
+    bs.login()
+    # # 获取某只股票的分钟级K线图
+    # plot_candlestick_for_stock(bs, "sh.000767", "2006-12-01", "2007-01-04", CandlestickInterval.MIN30)
+    #
+    # # 获取上证指数分钟级的K线图
     # plot_candlestick_for_index("2019-08-22 10:30", CandlestickInterval.MIN5)
 
+    temp_df = query_candlestick(bs, "sh.601212", "2021-01-01", "2022-02-09", frequency=CandlestickInterval.DAY)
+    temp_df2 = cal_macd(temp_df)
+    temp_df2.to_csv("./data/601212_d.csv", header=True, index=False)
+
+    divergence = Divergence(temp_df2)
+    divergence.merge_macd()
+    df = divergence.data
+    df.to_csv("./data/601212_d_res.csv", header=True, index=False)
+    print(divergence.bottom_divergence())
+
+    bs.logout()

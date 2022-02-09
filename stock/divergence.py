@@ -73,9 +73,7 @@ class Divergence:
         target_3 = self.data.iloc[-1]["macd_abs_max"] < self.data.iloc[-3]["macd_abs_max"]
         target_4 = self.data.iloc[-2]["DEA_max"] < 0
 
-        if target_1 and target_2 and target_3 and target_4:
-            return True
-        return False
+        return target_1 and target_2 and target_3 and target_4
 
     def peak_divergence(self):
         """

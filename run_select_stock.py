@@ -41,7 +41,7 @@ def generate_date_section(frequency: CandlestickInterval):
     return start_date, end_date
 
 
-def select_stock_by_divergence(bs, all_stock_list, frequency) -> list:
+def select_stock_by_divergence(bs, all_stock_list, frequency: CandlestickInterval) -> list:
     result = []
     start_date, end_date = generate_date_section(frequency)
 
@@ -52,7 +52,8 @@ def select_stock_by_divergence(bs, all_stock_list, frequency) -> list:
             divergence = Divergence(temp_df2)
             divergence.merge_macd()
             if divergence.bottom_divergence():
-                result.append(gid)
+                result.append(gid.split('.')[1])
+                divergence.data.to_csv(f"{args.path}/log_files/{gid.split('.')[1]}_{frequency.value}.csv", header=True, index=False)
         except Exception as e:
             logger.exception(e)
             continue
@@ -67,9 +68,8 @@ if __name__ == '__main__':
     all_stock_list = list(filter(lambda x: x.split(".")[1][:3] != "688", list(all_stock_df["code"])))
     bs.login()
 
-    for frequency in [CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MIN60,
-                      CandlestickInterval.MIN30, CandlestickInterval.MIN15]:
-        logger.info(f"开始搜索{frequency}级别背驰的股票")
+    for frequency in [CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MIN60]:
+        logger.info(f"开始搜索{frequency}级别背驰的股票".center(40, "*"))
         res_list = select_stock_by_divergence(bs, all_stock_list, frequency)
         logger.info(f"完成搜索{frequency}级别背驰的股票")
         logger.info(f"【{frequency}级别背驰的股票】: {res_list}")
