@@ -29,15 +29,16 @@ class Divergence:
         self.data = self.data.fillna(method="ffill")  # 用缺失值前面的一个值代替缺失值
         self.data = self.data.dropna()
 
-        self.data = self.data.groupby(["my_date"]).agg({
-            Field.Macd.val: ["sum"],
-            "macd_abs": ["sum", "max", "min"],
-            Field.Diff.val: ["max", "min"],
-            Field.Dea.val: ["max", "min"]
-        }).reset_index()
-
-        self.data.columns = ['my_date', 'macd_sum', 'macd_abs_sum', 'macd_abs_max', 'macd_abs_min',
-                             'DIFF_max', 'DIFF_min', 'DEA_max', 'DEA_min']
+        self.data = self.data.groupby("my_date").agg(
+            macd_sum=("Macd", "sum"),
+            macd_cnt=("Macd", "count"),
+            macd_abs_sum=("macd_abs", "sum"),
+            macd_abs_max=("macd_abs", "max"),
+            macd_abs_min=("macd_abs", "min"),
+            diff_max=("Diff", "max"),
+            diff_min=("Diff", "min"),
+            dea_max=("Dea", "max"),
+            dea_min=("Dea", "min")).reset_index()
 
     def tendency_strength_mean(self):
         """
@@ -64,16 +65,17 @@ class Divergence:
         if self.data.iloc[-1]["macd_sum"] > 0:
             # 最近时间处于红柱子
             return False
-        if self.data.iloc[-1]["DIFF_min"] > 0:
+        if self.data.iloc[-1]["diff_min"] > 0:
             # 最近时间的黄白线在0轴上方
             return False
 
         target_1 = self.data.iloc[-1]["macd_abs_sum"] < self.data.iloc[-3]["macd_abs_sum"]
-        target_2 = self.data.iloc[-3]["DIFF_min"] < self.data.iloc[-1]["DIFF_min"]
+        target_2 = self.data.iloc[-3]["diff_min"] < self.data.iloc[-1]["diff_min"]
         target_3 = self.data.iloc[-1]["macd_abs_max"] < self.data.iloc[-3]["macd_abs_max"]
-        target_4 = self.data.iloc[-2]["DEA_max"] < 0
+        target_4 = self.data.iloc[-2]["dea_max"] < 0
+        target_5 = self.data.iloc[-2]["macd_cnt"] > 10
 
-        return target_1 and target_2 and target_3 and target_4
+        return target_1 and target_2 and target_3 and target_4 and target_5
 
     def peak_divergence(self):
         """
