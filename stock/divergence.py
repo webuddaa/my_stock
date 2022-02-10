@@ -11,6 +11,12 @@ import pandas as pd
 from config.baostock_const import Field
 
 
+def cal_pos_ratio(s):
+    temp_list = list(s)
+    pos_cnt = len(list(filter(lambda x: x > 0, temp_list)))
+    return pos_cnt / len(temp_list)
+
+
 class Divergence:
 
     def __init__(self, data: pd.DataFrame):
@@ -38,7 +44,9 @@ class Divergence:
             diff_max=("Diff", "max"),
             diff_min=("Diff", "min"),
             dea_max=("Dea", "max"),
-            dea_min=("Dea", "min")).reset_index()
+            dea_min=("Dea", "min"),
+            dea_pos_cnt_ratio=("Dea", cal_pos_ratio)
+        ).reset_index()
 
     def tendency_strength_mean(self):
         """
@@ -72,7 +80,7 @@ class Divergence:
         target_1 = self.data.iloc[-1]["macd_abs_sum"] < self.data.iloc[-3]["macd_abs_sum"]
         target_2 = self.data.iloc[-3]["diff_min"] < self.data.iloc[-1]["diff_min"]
         target_3 = self.data.iloc[-1]["macd_abs_max"] < self.data.iloc[-3]["macd_abs_max"]
-        target_4 = self.data.iloc[-2]["dea_max"] < 0
+        target_4 = self.data.iloc[-2]["dea_pos_cnt_ratio"] < 0.25
         target_5 = self.data.iloc[-2]["macd_cnt"] > 10
 
         return target_1 and target_2 and target_3 and target_4 and target_5
@@ -81,10 +89,4 @@ class Divergence:
         """
         顶背驰
         """
-        if self.data.shape[0] < 5:
-            # 上市时间较短
-            return False
-
-        if self.data.iloc[-1]["macd_sum"] <= 0:
-            # 最近时间处于绿柱子
-            return False
+        pass
