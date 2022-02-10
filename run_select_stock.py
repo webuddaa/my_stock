@@ -67,8 +67,7 @@ if __name__ == '__main__':
     all_stock_list = list(filter(lambda x: x.split(".")[1][:3] != "688", list(all_stock_df["code"])))
     bs.login()
 
-    for frequency in [CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MIN60,
-                      CandlestickInterval.MIN30, CandlestickInterval.MIN15]:
+    for frequency in [CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MIN60]:
         logger.info(f"开始搜索{frequency}级别背驰的股票".center(50, "*"))
         res_list = select_stock_by_divergence(bs, all_stock_list, frequency)
         logger.info(f"完成搜索{frequency}级别背驰的股票")

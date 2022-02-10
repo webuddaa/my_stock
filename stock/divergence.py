@@ -74,7 +74,7 @@ class Divergence:
         if self.data.iloc[-1]["macd_sum"] > 0:
             # 最近时间处于红柱子
             return False
-        if self.data.iloc[-1]["diff_min"] > 0:
+        if self.data.iloc[-1]["diff_pos_cnt_ratio"] > 0.9:
             # 最近时间的黄白线在0轴上方
             return False
 
@@ -82,7 +82,7 @@ class Divergence:
         target_2 = self.data.iloc[-3]["diff_min"] < self.data.iloc[-1]["diff_min"]
         target_3 = self.data.iloc[-1]["macd_abs_max"] < self.data.iloc[-3]["macd_abs_max"]
         target_4 = self.data.iloc[-2]["diff_pos_cnt_ratio"] < 0.25
-        target_5 = self.data.iloc[-2]["macd_cnt"] > 10
+        target_5 = self.data.iloc[-2]["macd_cnt"] > 20
 
         return target_1 and target_2 and target_3 and target_4 and target_5
 
