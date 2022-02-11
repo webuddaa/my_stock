@@ -8,7 +8,6 @@ import pandas as pd
 import baostock as bs
 
 from src.config.baostock_const import CandlestickInterval, Adjustment
-from src.stock.divergence import Divergence
 from src.stock.indicator import cal_macd
 from src.stock.my_plot import plot_candlestick
 from src.stock.query import query_candlestick, query_all_stock, query_candlestick_from_jq
@@ -53,7 +52,7 @@ def get_all_stock(pt):
 def plot_candlestick_for_stock(bs, gid, start_date, end_date, frequency: CandlestickInterval,
                                flag=Adjustment.NO_ADJUST):
     """绘制任意股票的K线图"""
-    save_path = f"./result/{gid}_{frequency.value}m_{start_date}_{end_date}.png"
+    save_path = f"../result/{gid}_{frequency.value}m_{start_date}_{end_date}.png"
     temp_start_date = cal_date_section(start_date, frequency)
 
     data = query_candlestick(bs, gid, temp_start_date, end_date, frequency, flag=flag)
@@ -68,8 +67,8 @@ def plot_candlestick_for_index(mid_date, frequency: CandlestickInterval, index="
     绘制指数k线图
     mid_date: 选择需要查看的日期，例如 2021-03-22 10:30
     """
-    save_path = f"./result/{index}_{frequency.value}m_candlestick_{mid_date}.png"
-    data = pd.read_csv(f"./data/{index}_{frequency.value}m_sticks.csv")
+    save_path = f"../result/{index}_{frequency.value}m_candlestick_{mid_date}.png"
+    data = pd.read_csv(f"../data/{index}_{frequency.value}m_sticks.csv")
     index = data[data["Date"] == mid_date].index[0]
     df = data.iloc[index - 400: index + 200]
     df2 = cal_macd(df)
@@ -88,7 +87,7 @@ def get_candlestick_from_jq():
     end_date = "2021-12-31 16:00:00"
     df = query_candlestick_from_jq(count=count, unit=unit, end_date=end_date)
 
-    df.to_csv(f"./data/{security}_{unit}_sticks.csv", header=True, index=False)
+    df.to_csv(f"../data/{security}_{unit}_sticks.csv", header=True, index=False)
     logger.info("成功写入csv文件")
 
 
@@ -99,15 +98,5 @@ if __name__ == '__main__':
     #
     # # 获取上证指数分钟级的K线图
     # plot_candlestick_for_index("2019-08-22 10:30", CandlestickInterval.MIN5)
-
-    temp_df = query_candlestick(bs, "sh.601212", "2021-01-01", "2022-02-09", frequency=CandlestickInterval.DAY)
-    temp_df2 = cal_macd(temp_df)
-    temp_df2.to_csv("./data/601212_d.csv", header=True, index=False)
-
-    divergence = Divergence(temp_df2)
-    divergence.merge_macd()
-    df = divergence.data
-    df.to_csv("./data/601212_d_res.csv", header=True, index=False)
-    print(divergence.bottom_divergence())
 
     bs.logout()
