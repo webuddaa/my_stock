@@ -6,7 +6,7 @@
 **/__pycache__
 result/
 */.ipynb_checkpoints/
-config/private_config.py
+src/config/private_config.py
 
 
 

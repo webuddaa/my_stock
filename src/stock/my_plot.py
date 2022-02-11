@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import mplfinance as mpf
 
-from config.baostock_const import Field
-from config.plot_const import KWARGS
+from src.config.baostock_const import Field
+from src.config.plot_const import KWARGS
 
 
 def plot_candlestick(data: pd.DataFrame, save_path: str, volume=False):

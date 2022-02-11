@@ -8,7 +8,7 @@
 
 import pandas as pd
 
-from config.baostock_const import Field
+from src.config.baostock_const import Field
 
 
 def cal_pos_ratio(s):

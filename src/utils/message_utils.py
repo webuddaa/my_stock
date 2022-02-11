@@ -10,8 +10,8 @@ import zmail
 from loguru import logger
 from typing import List
 
-from config.private_config import PrivateConfig
-from exception.message_exception import SendMailException, SendWechatException
+from src.config.private_config import PrivateConfig
+from src.exception.message_exception import SendMailException, SendWechatException
 
 
 def my_send_email(subject: str, content: str, recipients: List[str] or str, content_type="text"):

@@ -2,21 +2,23 @@
 @author: xuxiangfeng
 @date: 2022/2/7
 @file_name: run_select_stock.py
+
+筛选出不同级别背驰的股票
 """
 import pandas as pd
 from loguru import logger
 import baostock as bs
 import argparse
 
-from config.baostock_const import CandlestickInterval
-from stock.divergence import Divergence
-from stock.indicator import cal_macd
-from stock.query import query_candlestick
-from utils.date_utils import MyDateProcess, DateFormat
-from utils.message_utils import send_wechat_msg
+from src.config.baostock_const import CandlestickInterval
+from src.stock.divergence import Divergence
+from src.stock.indicator import cal_macd
+from src.stock.query import query_candlestick
+from src.utils.date_utils import MyDateProcess, DateFormat
+from src.utils.message_utils import send_wechat_msg
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--path', type=str, default="/Users/xiangfeng/PycharmProjects/my_stock")
+parser.add_argument('--path', type=str)
 args = parser.parse_args()
 
 
