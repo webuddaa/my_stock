@@ -1,3 +1,5 @@
+rm run_files/src.zip
+
 zip -r run_files/src.zip src
 
 git add -A .
