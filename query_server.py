@@ -55,6 +55,7 @@ def get_stock_k_line():
             "save_path": save_path.split("/")[-1]}
         return render_template("response_for_stock.html", **query_dic)
     except Exception as e:
+        print(e)
         return render_template("error.html")
 
 
@@ -62,19 +63,22 @@ def get_stock_k_line():
 def get_index_k_line():
     middle_pt = request.form.get('middle_pt', None)
     frequency = request.form.get('frequency', None)
-
+    print(middle_pt, frequency)
     if not middle_pt:
+        print("middle_pt is error")
         return render_template("error.html")
 
     save_path = f"{args.path}/static/000001_{frequency}m_{middle_pt}.jpg"
     try:
         plot_candlestick_for_index(middle_pt, CandlestickInterval(frequency), args.path, save_path)
+        print("aa")
         query_dic = {
             "middle_pt": middle_pt,
             "frequency": frequency,
             "save_path": save_path.split("/")[-1]}
         return render_template("response_for_index.html", **query_dic)
     except Exception as e:
+        print(e)
         return render_template("error.html")
 
 
