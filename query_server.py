@@ -42,7 +42,3 @@ def get_stock_k_line():
     plot_candlestick_for_stock(bs, gid, start_date, end_date, CandlestickInterval(frequency), save_path)
     bs.logout()
     return render_template("response.html", **query_dic)
-
-
-if __name__ == '__main__':
-    app.run("0.0.0.0", 9999)

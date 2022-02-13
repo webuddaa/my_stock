@@ -2,13 +2,13 @@
 workers = 2
 
 # 指定每个工作者的线程数
-threads = 2
+# threads = 1
 
 # 监听内网端口9999
-bind = '47.94.99.97:9999'
+bind = '0.0.0.0:9999'
 
 # 设置守护进程,将进程交给supervisor管理
-daemon = 'false'
+# daemon = 'false'
 
 # 工作模式协程
 # worker_class = 'gevent'
