@@ -14,7 +14,7 @@ from src.config.plot_const import KWARGS
 def plot_candlestick(data: pd.DataFrame, save_path: str, volume=False):
     """
     data: [Date,Open,High,Low,Close,Volume,Diff,Dea,Macd]
-    save_path: './result/xxx.png'
+    save_path: './static/xxx.png'
     """
     data[Field.Date.val] = pd.to_datetime(data[Field.Date.val])
     # 将日期列作为行索引

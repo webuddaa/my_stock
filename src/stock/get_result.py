@@ -1,11 +1,11 @@
 """
 @author: xuxiangfeng
-@date: 2022/1/28
-@file_name: run.py
+@date: 2022/2/12
+@file_name: get_result.py
 """
+
 from loguru import logger
 import pandas as pd
-import baostock as bs
 
 from src.config.baostock_const import CandlestickInterval, Adjustment
 from src.stock.indicator import cal_macd
@@ -49,10 +49,9 @@ def get_all_stock(pt):
     logger.info(f"[all_gid_{pt}.csv]保存完成")
 
 
-def plot_candlestick_for_stock(bs, gid, start_date, end_date, frequency: CandlestickInterval,
+def plot_candlestick_for_stock(bs, gid, start_date, end_date, frequency: CandlestickInterval, save_path,
                                flag=Adjustment.NO_ADJUST):
     """绘制任意股票的K线图"""
-    save_path = f"../result/{gid}_{frequency.value}m_{start_date}_{end_date}.jpg"
     temp_start_date = cal_date_section(start_date, frequency)
 
     data = query_candlestick(bs, gid, temp_start_date, end_date, frequency, flag=flag)
@@ -90,13 +89,3 @@ def get_candlestick_from_jq():
     df.to_csv(f"../data/{security}_{unit}_sticks.csv", header=True, index=False)
     logger.info("成功写入csv文件")
 
-
-if __name__ == '__main__':
-    bs.login()
-    # 获取某只股票的分钟级K线图
-    plot_candlestick_for_stock(bs, "sh.601398", "2006-12-20", "2007-01-05", CandlestickInterval.MIN15)
-
-    # # 获取上证指数分钟级的K线图
-    # plot_candlestick_for_index("2019-08-22 10:30", CandlestickInterval.MIN5)
-
-    bs.logout()

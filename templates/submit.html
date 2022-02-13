@@ -1,0 +1,23 @@
+<html>
+<meta charset="UTF-8">
+    <body>
+      <div style="width:100%;text-align:center">
+        <h1>个股历史数据查询</h1>
+        <form method="post" action="http://47.94.99.97:9999/query_stock">
+            股票代码: <input type="text" name="gid" /><br>
+            开始日期: <input type="text" name="start_pt" /><br>
+            结束日期: <input type="text" name="end_pt" /><br>
+            K线级别: <select name="frequency">
+                       <option value="d" SELECTED>DAY</option>
+                       <option value="w">WEEK</option>
+                       <option value="60">MIN60</option>
+                       <option value="30">MIN30</option>
+                       <option value="15">MIN15</option>
+                       <option value="5">MIN5</option>
+                       <option value="1">MIN1</option>
+                    </select><br>
+            <input type="submit" value="提交" name="submit" />
+        </form>
+      </div>
+    </body>
+</html>

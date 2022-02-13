@@ -5,7 +5,6 @@
 /__pycache__
 */__pycache__
 **/__pycache__
-result/
 jupyter/
 */.ipynb_checkpoints/
 src/config/private_config.py
