@@ -39,6 +39,5 @@ def index():
     return render_template("response.html", **query_dic)
 
 
-#
-# if __name__ == '__main__':
-#     app.run("47.94.99.97", 9999)
+if __name__ == '__main__':
+    app.run("47.94.99.97", 9999)
