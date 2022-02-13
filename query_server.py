@@ -41,7 +41,6 @@ def get_stock_k_line():
     frequency = request.form.get('frequency', None)
 
     if not (gid and start_date and end_date):
-        logger.info("gid and start_date and end_date is error")
         return render_template("error.html")
 
     save_path = f"{args.path}/static/{gid}_{frequency}m_{start_date}_{end_date}.jpg"
@@ -65,15 +64,12 @@ def get_stock_k_line():
 def get_index_k_line():
     middle_pt = request.form.get('middle_pt', None)
     frequency = request.form.get('frequency', None)
-    logger.info(middle_pt, frequency)
     if not middle_pt:
-        logger.info("middle_pt is error")
         return render_template("error.html")
 
     save_path = f"{args.path}/static/000001_{frequency}m_{middle_pt}.jpg"
     try:
         plot_candlestick_for_index(middle_pt, CandlestickInterval(frequency), args.path, save_path)
-        logger.info("plot_candlestick_for_index is ok")
         query_dic = {
             "middle_pt": middle_pt,
             "frequency": frequency,
@@ -85,7 +81,6 @@ def get_index_k_line():
 
 
 if __name__ == '__main__':
-    # 只保留最近10天的日志
-    logger.add(f"{args.path}/log_files/temp.log", retention='10 days')
+    logger.add(args.path + "/log_files/runtime_{time}.log", rotation="100 MB")
 
     app.run("0.0.0.0", 9999)
