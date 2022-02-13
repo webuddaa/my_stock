@@ -8,7 +8,7 @@ workers = 2
 bind = '0.0.0.0:9999'
 
 # 设置守护进程,将进程交给supervisor管理
-# daemon = 'false'
+daemon = 'true'
 
 # 工作模式协程
 # worker_class = 'gevent'
@@ -23,5 +23,7 @@ bind = '0.0.0.0:9999'
 accesslog = './log_files/gunicorn_acess.log'
 errorlog = './log_files/gunicorn_error.log'
 
+# 设置日志记录水平
+loglevel = 'info'
 
 
