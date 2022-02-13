@@ -44,5 +44,5 @@ def get_stock_k_line():
     return render_template("response.html", **query_dic)
 
 
-# if __name__ == '__main__':
-#     app.run("127.0.0.1", 9999)
+if __name__ == '__main__':
+    app.run("127.0.0.1", 22338)
