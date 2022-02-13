@@ -4,6 +4,6 @@ zip -r run_files/src.zip src
 
 git add -A .
 
-git commit -m "添加http服务的代码"
+git commit -m "修复http服务的bug"
 
 git push origin feature-v1

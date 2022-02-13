@@ -17,8 +17,13 @@ args = parser.parse_args()
 app = Flask(__name__, template_folder=f"{args.path}/templates")
 
 
+@app.route("/stock_info", methods=["GET", "POST"])
+def input_info():
+    return render_template("submit.html")
+
+
 @app.route('/query_stock', methods=["POST"])
-def index():
+def get_stock_k_line():
     gid = request.form.get('gid', None)
     start_date = request.form.get('start_pt', None)
     end_date = request.form.get('end_pt', None)
@@ -39,5 +44,5 @@ def index():
     return render_template("response.html", **query_dic)
 
 
-if __name__ == '__main__':
-    app.run("47.94.99.97", 9999)
+# if __name__ == '__main__':
+#     app.run("127.0.0.1", 9999)
