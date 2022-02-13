@@ -11,7 +11,7 @@ bind = '47.94.99.97:9999'
 daemon = 'false'
 
 # 工作模式协程
-worker_class = 'gevent'
+# worker_class = 'gevent'
 
 # 设置最大并发量
 # worker_connections = 2000
