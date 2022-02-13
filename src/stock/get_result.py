@@ -61,13 +61,12 @@ def plot_candlestick_for_stock(bs, gid, start_date, end_date, frequency: Candles
     logger.info(f"[{gid}_{frequency.value}m_{start_date}_{end_date}] save success")
 
 
-def plot_candlestick_for_index(mid_date, frequency: CandlestickInterval, index="000001.XSHG"):
+def plot_candlestick_for_index(mid_date, frequency: CandlestickInterval, path, save_path, index="000001.XSHG"):
     """
     绘制指数k线图
     mid_date: 选择需要查看的日期，例如 2021-03-22 10:30
     """
-    save_path = f"../result/{index}_{frequency.value}m_candlestick_{mid_date}.png"
-    data = pd.read_csv(f"../data/{index}_{frequency.value}m_sticks.csv")
+    data = pd.read_csv(f"{path}/data/{index}_{frequency.value}m_sticks.csv")
     index = data[data["Date"] == mid_date].index[0]
     df = data.iloc[index - 400: index + 200]
     df2 = cal_macd(df)
