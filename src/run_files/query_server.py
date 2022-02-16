@@ -48,7 +48,7 @@ def get_stock_k_line():
             "start_pt": start_date,
             "end_pt": end_date,
             "frequency": frequency,
-            "save_path": save_path.split("/")[-1]}
+            "save_path": save_path}
         return render_template("response_for_stock.html", **query_dic)
     except Exception as e:
         logger.exception(e)
@@ -68,7 +68,7 @@ def get_index_k_line():
         query_dic = {
             "middle_pt": middle_pt,
             "frequency": frequency,
-            "save_path": save_path.split("/")[-1]}
+            "save_path": save_path}
         return render_template("response_for_index.html", **query_dic)
     except Exception as e:
         logger.exception(e)
