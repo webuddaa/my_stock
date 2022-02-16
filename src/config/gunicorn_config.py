@@ -1,8 +1,8 @@
 # 并行工作进程数
-workers = 2
+workers = 5
 
 # 指定每个工作者的线程数
-# threads = 1
+threads = 3
 
 # 监听内网端口9999
 bind = '0.0.0.0:9999'

@@ -1,9 +1,5 @@
-rm run_files/src.zip
-
-zip -r run_files/src.zip src
-
 git add -A .
 
-git commit -m "优化日志"
+git commit -m "调整代码结构"
 
 git push origin feature-v1
