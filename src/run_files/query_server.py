@@ -4,33 +4,28 @@
 @file_name: query_server.py
 """
 import baostock as bs
-import argparse
 from loguru import logger
 from flask import Flask, request, render_template
 
 from src.config.baostock_const import CandlestickInterval
+from src.config.common_config import PATH, SERVER_IP, SERVER_PORT
 from src.stock.get_result import plot_candlestick_for_stock, plot_candlestick_for_index
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--ip', type=str, default="47.94.99.97")
-parser.add_argument('--path', type=str, default="/xiangfeng/my_stock")
-args = parser.parse_args()
-
-app = Flask(__name__, template_folder=f"{args.path}/templates")
+app = Flask(__name__, template_folder=f"{PATH}/templates")
 
 
 @app.route("/submit_init", methods=["GET"])
 def submit_init():
-    return render_template("submit_init.html", ip=args.ip)
+    return render_template("submit_init.html", ip=SERVER_IP)
 
 
 @app.route('/query_init', methods=["POST"])
 def fun():
     query_type = request.form.get('query_type')
     if query_type == "stock":
-        return render_template("submit_stock.html", ip=args.ip)
+        return render_template("submit_stock.html", ip=SERVER_IP)
     else:
-        return render_template("submit_index.html", ip=args.ip)
+        return render_template("submit_index.html", ip=SERVER_IP)
 
 
 @app.route('/query_stock', methods=["POST"])
@@ -43,7 +38,7 @@ def get_stock_k_line():
     if not (gid and start_date and end_date):
         return render_template("error.html")
 
-    save_path = f"{args.path}/static/{gid}_{frequency}m_{start_date}_{end_date}.jpg"
+    save_path = f"{PATH}/static/{gid}_{frequency}m_{start_date}_{end_date}.jpg"
     try:
         bs.login()
         plot_candlestick_for_stock(bs, gid, start_date, end_date, CandlestickInterval(frequency), save_path)
@@ -67,9 +62,9 @@ def get_index_k_line():
     if not middle_pt:
         return render_template("error.html")
 
-    save_path = f"{args.path}/static/000001_{frequency}m_{middle_pt}.jpg"
+    save_path = f"{PATH}/static/000001_{frequency}m_{middle_pt}.jpg"
     try:
-        plot_candlestick_for_index(middle_pt, CandlestickInterval(frequency), args.path, save_path)
+        plot_candlestick_for_index(middle_pt, CandlestickInterval(frequency), PATH, save_path)
         query_dic = {
             "middle_pt": middle_pt,
             "frequency": frequency,
@@ -81,6 +76,6 @@ def get_index_k_line():
 
 
 if __name__ == '__main__':
-    logger.add(args.path + "/log_files/runtime_{time}.log", rotation="100 MB")
+    logger.add(PATH + "/log_files/runtime_{time}.log", rotation="100 MB")
 
-    app.run("0.0.0.0", 9999)
+    app.run("0.0.0.0", SERVER_PORT)
