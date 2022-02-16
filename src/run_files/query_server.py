@@ -16,16 +16,16 @@ app = Flask(__name__, template_folder=f"{PATH}/templates")
 
 @app.route("/submit_init", methods=["GET"])
 def submit_init():
-    return render_template("submit_init.html", ip=SERVER_IP)
+    return render_template("submit_init.html", ip=SERVER_IP, port=SERVER_PORT)
 
 
 @app.route('/query_init', methods=["POST"])
 def fun():
     query_type = request.form.get('query_type')
     if query_type == "stock":
-        return render_template("submit_stock.html", ip=SERVER_IP)
+        return render_template("submit_stock.html", ip=SERVER_IP, port=SERVER_PORT)
     else:
-        return render_template("submit_index.html", ip=SERVER_IP)
+        return render_template("submit_index.html", ip=SERVER_IP, port=SERVER_PORT)
 
 
 @app.route('/query_stock', methods=["POST"])

@@ -16,7 +16,7 @@ daemon = 'true'
 # worker_class = 'gevent'
 
 # 设置最大并发量
-# worker_connections = 2000
+worker_connections = 5
 
 # 设置进程文件目录
 # pidfile = '/var/run/gunicorn.pid'
