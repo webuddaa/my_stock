@@ -1,18 +1,21 @@
 <html>
 <meta charset="UTF-8">
-    <head>
-          <title>墨林股票系统</title>
-    </head>
-    <body>
-      <div style="width:100%;text-align:center">
-        <h1>墨林股票系统入口</h1>
-        <form method="post" action="http://{{ip_port}}/query_init">
-            查询类型: <select name="query_type">
-                       <option value="stock" SELECTED>股票</option>
-                       <option value="index">上证指数</option>
-                    </select>
-            &nbsp &nbsp <input type="submit" value="提交" name="submit" />
-        </form>
-      </div>
-    </body>
+<head>
+    <title>墨林股票系统</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+<div style="width:100%;text-align:center">
+    <h1>墨林股票系统入口</h1>
+    <form method="post" action="http://{{ip_port}}/query_init">
+        查询类型: <select name="query_type">
+        <option value="stock" SELECTED>股票</option>
+        <option value="index">上证指数</option>
+    </select>
+        &nbsp &nbsp <input type="submit" value="提交" name="submit"/>
+    </form>
+</div>
+</body>
 </html>

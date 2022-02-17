@@ -1,5 +1,5 @@
 git add -A .
 
-git commit -m "修复页面不能展示图片的问题"
+git commit -m "增加favicon.png"
 
 git push origin feature-v1
