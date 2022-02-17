@@ -16,16 +16,18 @@ app = Flask(__name__, template_folder=f"{PATH}/templates")
 
 @app.route("/submit_init", methods=["GET"])
 def submit_init():
-    return render_template("submit_init.html", ip=SERVER_IP, port=SERVER_PORT)
+    ip_port = f"{SERVER_IP}:{SERVER_PORT}"
+    return render_template("submit_init.html", ip_port=ip_port)
 
 
 @app.route('/query_init', methods=["POST"])
 def fun():
     query_type = request.form.get('query_type')
+    ip_port = f"{SERVER_IP}:{SERVER_PORT}"
     if query_type == "stock":
-        return render_template("submit_stock.html", ip=SERVER_IP, port=SERVER_PORT)
+        return render_template("submit_stock.html", ip_port=ip_port)
     else:
-        return render_template("submit_index.html", ip=SERVER_IP, port=SERVER_PORT)
+        return render_template("submit_index.html", ip_port=ip_port)
 
 
 @app.route('/query_stock', methods=["POST"])
@@ -48,7 +50,7 @@ def get_stock_k_line():
             "start_pt": start_date,
             "end_pt": end_date,
             "frequency": frequency,
-            "save_path": save_path}
+            "file_name": save_path.split("/")[-1]}
         return render_template("response_for_stock.html", **query_dic)
     except Exception as e:
         logger.exception(e)
@@ -68,7 +70,7 @@ def get_index_k_line():
         query_dic = {
             "middle_pt": middle_pt,
             "frequency": frequency,
-            "save_path": save_path}
+            "file_name": save_path.split("/")[-1]}
         return render_template("response_for_index.html", **query_dic)
     except Exception as e:
         logger.exception(e)
