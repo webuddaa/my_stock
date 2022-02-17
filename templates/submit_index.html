@@ -1,23 +1,24 @@
 <html>
 <meta charset="UTF-8">
-    <head>
-          <title>墨林股票系统</title>
-    </head>
-    <body>
-      <div style="width:100%;text-align:center">
-        <h1>上证指数历史分钟级数据查询</h1>
-        <form method="post" action="http://{{ip_port}}/query_index">
-            查询日期: <input type="text" name="middle_pt" />
-            &nbsp &nbsp K线级别: <select name="frequency">
-                       <option value="60">MIN60</option>
-                       <option value="30">MIN30</option>
-                       <option value="15">MIN15</option>
-                       <option value="5">MIN5</option>
-                       <option value="1">MIN1</option>
-                    </select><br>
-            <br />
-            <input type="submit" value="提交" name="submit" />
-        </form>
-      </div>
-    </body>
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
+    <title>墨林股票系统</title>
+</head>
+<body>
+<div style="width:100%;text-align:center">
+    <h1>上证指数历史分钟级数据查询</h1>
+    <form method="post" action="http://{{ip_port}}/query_index">
+        查询日期: <input type="text" name="middle_pt"/>
+        &nbsp &nbsp K线级别: <select name="frequency">
+        <option value="60">MIN60</option>
+        <option value="30">MIN30</option>
+        <option value="15">MIN15</option>
+        <option value="5">MIN5</option>
+        <option value="1">MIN1</option>
+    </select><br>
+        <br/>
+        <input type="submit" value="提交" name="submit"/>
+    </form>
+</div>
+</body>
 </html>
