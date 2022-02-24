@@ -40,13 +40,15 @@ def get_stock_k_line():
     if not (gid and start_date and end_date):
         return render_template("error.html")
 
+    code = f"sh.{gid}" if gid.startswith("6") else f"sz.{gid}"
+
     save_path = f"{PATH}/static/{gid}_{frequency}m_{start_date}_{end_date}.jpg"
     try:
         bs.login()
-        plot_candlestick_for_stock(bs, gid, start_date, end_date, CandlestickInterval(frequency), save_path)
+        plot_candlestick_for_stock(bs, code, start_date, end_date, CandlestickInterval(frequency), save_path)
         bs.logout()
         query_dic = {
-            "gid": gid,
+            "gid": code,
             "start_pt": start_date,
             "end_pt": end_date,
             "frequency": frequency,
