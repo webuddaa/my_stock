@@ -14,12 +14,13 @@ from src.config.private_config import PrivateConfig
 from src.exception.message_exception import SendMailException, SendWechatException
 
 
-def my_send_email(subject: str, content: str, recipients: List[str] or str, content_type="text"):
+def my_send_email(subject: str, content: str, recipients: List[str] or str, attachments_path=None, content_type="text"):
     """
     发送邮件到指定的邮箱
     :param subject: 邮件的主题
     :param content: 邮件的内容
     :param recipients: 指定的邮箱
+    :param attachments_path: 附件的绝对路径
     :param content_type:
     """
     if content_type not in ("text", "html"):
@@ -27,7 +28,7 @@ def my_send_email(subject: str, content: str, recipients: List[str] or str, cont
     mail_content = {
         "subject": subject,
         f"content_{content_type}": content,
-        "attachments": ""  # 附件的绝对路径
+        "attachments": attachments_path
     }
     try:
         # 配置发送方的邮箱和密码
