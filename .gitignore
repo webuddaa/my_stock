@@ -9,5 +9,7 @@ jupyter/
 */.ipynb_checkpoints/
 src/config/private_config.py
 
+/venv
+
 
 

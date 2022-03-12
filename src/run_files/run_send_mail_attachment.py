@@ -12,5 +12,3 @@ if __name__ == '__main__':
         content="小楼一夜听春雨",
         recipients="1284950402@qq.com",
         attachments_path=f"{PATH}/temp.zip")
-
-
