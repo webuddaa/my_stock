@@ -66,16 +66,20 @@ if __name__ == '__main__':
     all_stock_list = list(filter(lambda x: x.split(".")[1][:3] != "688", list(all_stock_df["code"])))
     bs.login()
 
-    for frequency in [CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MIN60]:
-        logger.info(f"开始搜索{frequency}级别背驰的股票".center(50, "*"))
-        res_list = select_stock_by_divergence(bs, all_stock_list, frequency)
-        logger.info(f"完成搜索{frequency}级别背驰的股票")
+    try:
+        for frequency in [CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MIN60]:
+            logger.info(f"开始搜索{frequency}级别背驰的股票".center(50, "*"))
+            res_list = select_stock_by_divergence(bs, all_stock_list, frequency)
+            logger.info(f"完成搜索{frequency}级别背驰的股票")
 
-        logger.info(f"【{frequency}级别背驰的股票】: {res_list}")
-        send_wechat_msg(f"【{frequency}级别背驰的股票】: {res_list}")
+            logger.info(f"【{frequency}级别背驰的股票】: {res_list}")
+            send_wechat_msg(f"【{frequency}级别背驰的股票】: {res_list}")
 
-        for code in res_list:
-            start_date, end_date = generate_date_section(frequency)
-            save_path = f"{PATH}/temp/{code}_{frequency}m_{start_date}_{end_date}.jpg"
-            plot_candlestick_for_stock(bs, code, start_date, end_date, frequency, save_path)
-    bs.logout()
+            for code in res_list:
+                start_date, end_date = generate_date_section(frequency)
+                save_path = f"{PATH}/temp/{code}_{frequency}m_{start_date}_{end_date}.jpg"
+                plot_candlestick_for_stock(bs, code, start_date, end_date, frequency, save_path)
+    except Exception as e:
+        logger.exception(e)
+    finally:
+        bs.logout()
