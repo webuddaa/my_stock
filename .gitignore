@@ -10,6 +10,8 @@ jupyter/
 src/config/private_config.py
 
 /venv
+/log_files
+/static
 
 
 
