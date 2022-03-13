@@ -37,6 +37,10 @@ def cal_date_section(start_date: str, frequency: CandlestickInterval):
         temp_start_date = MyDateProcess.add_delta(start_date, -300, output_format=DateFormat.DAY_LINE)
         return temp_start_date
 
+    if frequency == CandlestickInterval.WEEK:
+        temp_start_date = MyDateProcess.add_delta(start_date, -1500, output_format=DateFormat.DAY_LINE)
+        return temp_start_date
+
     raise ValueError(f"{frequency} is error")
 
 
