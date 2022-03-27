@@ -1,6 +1,6 @@
 path="/xiangfeng/my_stock"
 
-rm ${path}/temp/*
+rm ${path}/static/*
 
 cd ${path}
 
