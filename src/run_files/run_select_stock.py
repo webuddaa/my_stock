@@ -12,7 +12,6 @@ import baostock as bs
 from src.config.baostock_const import CandlestickInterval
 from src.config.common_config import PATH
 from src.stock.divergence import Divergence
-from src.stock.get_result import plot_candlestick_for_stock
 from src.stock.indicator import cal_macd
 from src.stock.query import query_candlestick
 from src.utils.date_utils import MyDateProcess, DateFormat
@@ -53,7 +52,6 @@ def select_stock_by_divergence(bs, all_stock_list, frequency: CandlestickInterva
             if divergence.bottom_divergence():
                 result.append(gid)
         except Exception as e:
-            # logger.exception(e)
             continue
     return result
 
@@ -67,18 +65,13 @@ if __name__ == '__main__':
     bs.login()
 
     try:
-        for frequency in [CandlestickInterval.DAY, CandlestickInterval.WEEK, CandlestickInterval.MIN60]:
+        for frequency in [CandlestickInterval.DAY, CandlestickInterval.MIN60, CandlestickInterval.MIN30]:
             logger.info(f"开始搜索{frequency}级别背驰的股票".center(50, "*"))
             res_list = select_stock_by_divergence(bs, all_stock_list, frequency)
             logger.info(f"完成搜索{frequency}级别背驰的股票")
 
             logger.info(f"【{frequency}级别背驰的股票】: {res_list}")
             send_wechat_msg(f"【{frequency}级别背驰的股票】: {res_list}")
-
-            for code in res_list:
-                start_date, end_date = generate_date_section(frequency)
-                save_path = f"{PATH}/temp/{code}_{frequency}m_{start_date}_{end_date}.jpg"
-                plot_candlestick_for_stock(bs, code, start_date, end_date, frequency, save_path)
     except Exception as e:
         logger.exception(e)
     finally:

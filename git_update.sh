@@ -1,5 +1,5 @@
 git add -A .
 
-git commit -m "添加发送邮件的代码"
+git commit -m "添加30分钟的背驰股票"
 
 git push origin feature-v1
