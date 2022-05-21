@@ -8,10 +8,10 @@ from loguru import logger
 from flask import Flask, request, render_template
 
 from src.config.baostock_const import CandlestickInterval
-from src.config.common_config import PATH, SERVER_IP, SERVER_PORT
+from src.config.common_config import SERVER_IP, SERVER_PORT
 from src.stock.get_result import plot_candlestick_for_stock, plot_candlestick_for_index
 
-app = Flask(__name__, template_folder=f"{PATH}/templates")
+app = Flask(__name__, template_folder=f"./templates")
 
 
 @app.route("/submit_init", methods=["GET"])
@@ -42,7 +42,7 @@ def get_stock_k_line():
 
     code = f"sh.{gid}" if gid.startswith("6") else f"sz.{gid}"
 
-    save_path = f"{PATH}/static/{gid}_{frequency}m_{start_date}_{end_date}.jpg"
+    save_path = f"./static/{gid}_{frequency}m_{start_date}_{end_date}.jpg"
     try:
         bs.login()
         plot_candlestick_for_stock(bs, code, start_date, end_date, CandlestickInterval(frequency), save_path)
@@ -66,9 +66,9 @@ def get_index_k_line():
     if not middle_pt:
         return render_template("error.html")
 
-    save_path = f"{PATH}/static/000001_{frequency}m_{middle_pt}.jpg"
+    save_path = f"./static/000001_{frequency}m_{middle_pt}.jpg"
     try:
-        plot_candlestick_for_index(middle_pt, CandlestickInterval(frequency), PATH, save_path)
+        plot_candlestick_for_index(middle_pt, CandlestickInterval(frequency), save_path)
         query_dic = {
             "middle_pt": middle_pt,
             "frequency": frequency,
@@ -80,6 +80,6 @@ def get_index_k_line():
 
 
 if __name__ == '__main__':
-    logger.add(PATH + "/log_files/runtime_{time}.log", rotation="100 MB")
+    logger.add("./log_files/runtime_{time}.log", rotation="100 MB")
 
     app.run("0.0.0.0", SERVER_PORT)

@@ -1,7 +1,5 @@
-path="/xiangfeng/my_stock"
+cd /xiangfeng/my_stock
 
-rm ${path}/static/*
-
-cd ${path}
+rm ./static/*
 
 venv/bin/python -m src.run_files.run_select_stock

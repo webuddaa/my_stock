@@ -49,7 +49,7 @@ def get_all_stock(pt):
     pt: 2021-11-26
     """
     df = query_all_stock(pt)
-    df.to_csv(f"../data/all_gid_{pt}.csv", header=True, index=False)
+    df.to_csv(f"./data/all_gid_{pt}.csv", header=True, index=False)
     logger.info(f"[all_gid_{pt}.csv]保存完成")
 
 
@@ -65,12 +65,12 @@ def plot_candlestick_for_stock(bs, gid, start_date, end_date, frequency: Candles
     logger.info(f"[{gid}_{frequency.value}m_{start_date}_{end_date}] save success")
 
 
-def plot_candlestick_for_index(mid_date, frequency: CandlestickInterval, path, save_path, index="000001.XSHG"):
+def plot_candlestick_for_index(mid_date, frequency: CandlestickInterval, save_path, index="000001.XSHG"):
     """
     绘制指数k线图
     mid_date: 选择需要查看的日期，例如 2021-03-22 10:30
     """
-    data = pd.read_csv(f"{path}/data/{index}_{frequency.value}m_sticks.csv")
+    data = pd.read_csv(f"./data/{index}_{frequency.value}m_sticks.csv")
     index = data[data["Date"] == mid_date].index[0]
     df = data.iloc[index - 400: index + 200]
     df2 = cal_macd(df)
