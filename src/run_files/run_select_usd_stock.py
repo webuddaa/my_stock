@@ -29,6 +29,9 @@ def get_usd_stock_df(symbol, begin_date, end_date) -> pd.DataFrame:
         res_dic = response.json()
         if res_dic.get("DataStatus").get("StatusCode") != 100:
             raise Exception("请求数据失败")
+        data = res_dic.get("Data")
+        if not isinstance(data, list) or len(data) < 50:
+            return
         df = pd.DataFrame(res_dic.get("Data"))
         df2 = df[["TimeKey", "Open", "High", "Low", "Close", "Volume"]]
         df2["TimeKey"] = df2["TimeKey"].astype(str)
@@ -45,6 +48,8 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
     for symbol in all_stock_list:
         try:
             temp_df = get_usd_stock_df(symbol, start_date, end_date)
+            if not temp_df:
+                continue
             temp_df2 = cal_macd(temp_df)
             divergence = Divergence(temp_df2)
             divergence.merge_macd()
