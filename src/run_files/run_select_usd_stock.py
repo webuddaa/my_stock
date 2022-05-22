@@ -48,7 +48,7 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
     for symbol in all_stock_list:
         try:
             temp_df = get_usd_stock_df(symbol, start_date, end_date)
-            if not temp_df:
+            if not isinstance(temp_df, pd.DataFrame):
                 continue
             temp_df2 = cal_macd(temp_df)
             divergence = Divergence(temp_df2)
