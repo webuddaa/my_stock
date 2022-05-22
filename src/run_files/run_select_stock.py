@@ -64,7 +64,7 @@ if __name__ == '__main__':
     bs.login()
 
     try:
-        for frequency in [CandlestickInterval.DAY, CandlestickInterval.MIN60, CandlestickInterval.MIN30]:
+        for frequency in [CandlestickInterval.DAY, CandlestickInterval.MIN60]:
             logger.info(f"开始搜索{frequency}级别背驰的股票".center(50, "*"))
             res_list = select_stock_by_divergence(bs, all_stock_list, frequency)
             logger.info(f"完成搜索{frequency}级别背驰的股票")
