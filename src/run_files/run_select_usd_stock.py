@@ -47,6 +47,7 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
     end_date = MyDateProcess.add_delta_from_now(0)
     for symbol in all_stock_list:
         try:
+            logger.info(f"symbol={symbol}")
             temp_df = get_usd_stock_df(symbol, start_date, end_date)
             if not isinstance(temp_df, pd.DataFrame):
                 continue
