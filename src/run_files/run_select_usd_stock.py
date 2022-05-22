@@ -31,7 +31,7 @@ def get_usd_stock_df(symbol, begin_date, end_date) -> Optional[pd.DataFrame]:
         if res_dic.get("DataStatus").get("StatusCode") != 100:
             raise Exception("请求数据失败")
         data = res_dic.get("Data")
-        if not isinstance(data, list):
+        if not isinstance(data, list) or len(data) == 0:
             return
         df = pd.DataFrame(res_dic.get("Data"))
         df2 = df[["TimeKey", "Open", "High", "Low", "Close", "Volume"]]
@@ -49,7 +49,10 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
     for index, symbol in enumerate(all_stock_list):
         try:
             temp_df = get_usd_stock_df(symbol, start_date, end_date)
-            if not isinstance(temp_df, pd.DataFrame) or temp_df.iloc[-1]["Close"] < 5:
+            if not isinstance(temp_df, pd.DataFrame) or temp_df.shape[0] == 0:
+                continue
+
+            if temp_df.iloc[-1]["Close"] < 5:
                 continue
 
             logger.info(f"symbol:{symbol}, index={index}")
