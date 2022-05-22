@@ -5,6 +5,7 @@
 
 筛选美股中背驰的股票
 """
+from typing import Optional
 import requests
 import pandas as pd
 from loguru import logger
@@ -16,7 +17,7 @@ from src.utils.date_utils import MyDateProcess
 from src.utils.message_utils import send_wechat_msg
 
 
-def get_usd_stock_df(symbol, begin_date, end_date) -> pd.DataFrame:
+def get_usd_stock_df(symbol, begin_date, end_date) -> Optional[pd.DataFrame]:
     url = "https://api.gugudata.com/stock/us"
     headers = {"Content-Type": "application/json;charset=utf-8"}
     params = {"appkey": PrivateConfig.GUGUDATA_KEY,
@@ -30,7 +31,7 @@ def get_usd_stock_df(symbol, begin_date, end_date) -> pd.DataFrame:
         if res_dic.get("DataStatus").get("StatusCode") != 100:
             raise Exception("请求数据失败")
         data = res_dic.get("Data")
-        if not isinstance(data, list) or len(data) < 50:
+        if not isinstance(data, list):
             return
         df = pd.DataFrame(res_dic.get("Data"))
         df2 = df[["TimeKey", "Open", "High", "Low", "Close", "Volume"]]
@@ -47,10 +48,11 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
     end_date = MyDateProcess.add_delta_from_now(0)
     for index, symbol in enumerate(all_stock_list):
         try:
-            logger.info(f"symbol={symbol}, index={index}")
             temp_df = get_usd_stock_df(symbol, start_date, end_date)
-            if not isinstance(temp_df, pd.DataFrame):
+            if not isinstance(temp_df, pd.DataFrame) or temp_df.iloc[-1]["Close"] < 5:
                 continue
+
+            logger.info(f"symbol:{symbol}, index={index}")
             temp_df2 = cal_macd(temp_df)
             divergence = Divergence(temp_df2)
             divergence.merge_macd()
