@@ -9,6 +9,8 @@ from dataclasses import dataclass
 import tushare as ts
 import pandas as pd
 
+from src.run_files.run_select_usd_stock import get_usd_stock_df
+
 if __name__ == '__main__':
 
     # pro = ts.pro_api("73252a830bcd894cad3daeb2b02beb626e6b91be457bdaef34878765")
@@ -25,7 +27,9 @@ if __name__ == '__main__':
     #
     # res_df = pd.concat(df_list)
 
-    df = pd.read_csv("./data/all_usd_stock.csv")
-    df2 = df[df["delist_date"].notnull()]
-    print(df2)
+    df = get_usd_stock_df("PDD", "20210909", "20220522")
+
+    print(df.head())
+
+    print(df.tail())
 

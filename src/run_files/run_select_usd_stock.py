@@ -50,9 +50,11 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
         try:
             temp_df = get_usd_stock_df(symbol, start_date, end_date)
             if not isinstance(temp_df, pd.DataFrame) or temp_df.shape[0] == 0:
+                # 退市的，剔除
                 continue
 
-            if temp_df.iloc[-1]["Close"] < 5:
+            if temp_df.iloc[-1]["Close"] < 1:
+                # 股价低于1美元的，剔除
                 continue
 
             logger.info(f"symbol:{symbol}, index={index}")
