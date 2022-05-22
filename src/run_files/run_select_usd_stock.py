@@ -67,6 +67,8 @@ if __name__ == '__main__':
     logger.add(f"./log_files/run_select_usd_stock.log", retention='10 days')
     all_usd_stock_df = pd.read_csv("./data/all_usd_stock.csv")
     all_usd_stock_list = list(all_usd_stock_df["ts_code"])
+
+    logger.info(f"开始从{len(all_usd_stock_list)}只美股中，筛选背驰的股票")
     res_list = select_usd_stock_by_divergence(all_usd_stock_list)
 
     content = f"美股日线级别背驰的股票: {res_list}"
