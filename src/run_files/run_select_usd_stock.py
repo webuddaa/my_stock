@@ -10,6 +10,7 @@ import requests
 import pandas as pd
 from loguru import logger
 
+from src.config.common_config import ALL_USD_STOCK_LIST
 from src.config.private_config import PrivateConfig
 from src.stock.divergence import Divergence
 from src.stock.indicator import cal_macd
@@ -46,7 +47,7 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
     result = []
     start_date = MyDateProcess.add_delta_from_now(-300)
     end_date = MyDateProcess.add_delta_from_now(0)
-    for index, symbol in enumerate(all_stock_list):
+    for symbol in all_stock_list:
         try:
             temp_df = get_usd_stock_df(symbol, start_date, end_date)
             if not isinstance(temp_df, pd.DataFrame) or temp_df.shape[0] == 0:
@@ -57,7 +58,6 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
                 # 股价低于1美元的，剔除
                 continue
 
-            logger.info(f"symbol:{symbol}, index={index}")
             temp_df2 = cal_macd(temp_df)
             divergence = Divergence(temp_df2)
             divergence.merge_macd()
@@ -73,11 +73,8 @@ if __name__ == '__main__':
 
     # 只保留最近10天的日志
     logger.add(f"./log_files/run_select_usd_stock.log", retention='10 days')
-    all_usd_stock_df = pd.read_csv("./data/all_usd_stock.csv")
-    all_usd_stock_list = list(all_usd_stock_df["ts_code"])
 
-    logger.info(f"开始从{len(all_usd_stock_list)}只美股中，筛选背驰的股票")
-    res_list = select_usd_stock_by_divergence(all_usd_stock_list)
+    res_list = select_usd_stock_by_divergence(ALL_USD_STOCK_LIST)
 
     content = f"美股日线级别背驰的股票: {res_list}"
     logger.info(content)
