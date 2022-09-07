@@ -45,6 +45,8 @@ def select_stock_by_divergence(bs, all_stock_list, frequency: CandlestickInterva
     for gid in all_stock_list:
         try:
             temp_df = query_candlestick(bs, gid, start_date, end_date, frequency=frequency)
+            if temp_df.iloc[-1]["Close"] < 5:
+                continue
             temp_df2 = cal_macd(temp_df)
             divergence = Divergence(temp_df2)
             divergence.merge_macd()
@@ -59,7 +61,7 @@ if __name__ == '__main__':
     # 只保留最近10天的日志
     logger.add(f"./log_files/run_select_stock.log", retention='10 days')
 
-    all_stock_df = pd.read_csv(f"./data/all_gid_2022-01-28.csv")
+    all_stock_df = pd.read_csv("./data/all_gid_2022-09-06.csv")
     all_stock_list = list(filter(lambda x: x.split(".")[1][:3] != "688", list(all_stock_df["code"])))
     bs.login()
 

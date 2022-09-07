@@ -54,8 +54,8 @@ def select_usd_stock_by_divergence(all_stock_list) -> list:
                 # 退市的，剔除
                 continue
 
-            if temp_df.iloc[-1]["Close"] < 1:
-                # 股价低于1美元的，剔除
+            if temp_df.iloc[-1]["Close"] < 3:
+                # 股价低于3美元的，剔除
                 continue
 
             temp_df2 = cal_macd(temp_df)
