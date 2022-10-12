@@ -48,12 +48,12 @@ def select_stock_by_divergence(all_stock_list, stock_type) -> list:
     else:
         raise ValueError("stock_type error")
     for index, symbol in enumerate(all_stock_list):
-        if index % 50 == 0:
+        if index % 200 == 0:
             logger.info(f"进度: {index} / {length}")
         try:
             dd = func(symbol=symbol, period="daily", start_date=start_date, end_date=end_date, adjust="")
 
-            if not isinstance(dd, pd.DataFrame) or dd.shape[0] > 60:
+            if not isinstance(dd, pd.DataFrame) or dd.shape[0] < 60:
                 # 退市的，剔除
                 continue
 
