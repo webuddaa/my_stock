@@ -37,6 +37,7 @@ def select_stock_by_divergence(all_stock_list, stock_type) -> list:
     result = []
     start_date = MyDateProcess.add_delta_from_now(-300)
     end_date = MyDateProcess.add_delta_from_now(0)
+    length = len(all_stock_list)
 
     if stock_type == "hk":
         func = ak.stock_hk_hist
@@ -46,7 +47,9 @@ def select_stock_by_divergence(all_stock_list, stock_type) -> list:
         func = ak.stock_zh_a_hist
     else:
         raise ValueError("stock_type error")
-    for symbol in all_stock_list:
+    for index, symbol in enumerate(all_stock_list):
+        if index % 50 == 0:
+            logger.info(f"进度: index / {length}")
         try:
             dd = func(symbol=symbol, period="daily", start_date=start_date, end_date=end_date, adjust="")
 
@@ -74,6 +77,8 @@ if __name__ == '__main__':
         logger.info(f"开始搜索{stock_type}日线级别背驰的股票")
 
         all_stock_list = get_all_stock_code(stock_type)
+
+        logger.info(f"{stock_type} | 一共有{len(all_stock_list)}只股票")
         res_list = select_stock_by_divergence(all_stock_list, stock_type)
 
         logger.info(f"结束搜索{stock_type}日线级别背驰的股票")
