@@ -26,7 +26,7 @@ def get_all_stock_code(stock_type) -> list:
     if stock_type == "china":
         df = ak.stock_zh_a_spot_em()
         df["target"] = df["代码"].apply(lambda x: x.startswith("688"))
-        df2 = df[(df["最新价"] > 5) & (df["成交量"] > 0) & (df["换手率"].notnull()) & (not df["target"])]
+        df2 = df[(df["最新价"] > 5) & (df["成交量"] > 0) & (df["换手率"].notnull()) & (df["target"] == False)]
         return list(df2["代码"])
 
 
