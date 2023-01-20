@@ -68,9 +68,7 @@ class Divergence:
         return temp_df
 
     def bottom_divergence(self) -> bool:
-        """
-        底背驰
-        """
+        """底背驰"""
         if self.data.iloc[-1]["macd_sum"] > 0:
             # 最近时间处于红柱子
             return False
@@ -90,4 +88,7 @@ class Divergence:
         """
         顶背驰
         """
-        pass
+        if self.data.iloc[-1]["macd_sum"] < 0:
+            return False
+
+

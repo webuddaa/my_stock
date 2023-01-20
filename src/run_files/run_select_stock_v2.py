@@ -17,7 +17,7 @@ def get_all_stock_code(stock_type) -> list:
     """获取不同市场的所有股code"""
     if stock_type == "hk":
         df = ak.stock_hk_spot_em()
-        df2 = df[(df["最新价"] > 5) & (df["成交量"] > 0) & (df["成交额"].notnull())]
+        df2 = df[(df["最新价"] > 2) & (df["成交量"] > 0) & (df["成交额"].notnull())]
         return list(df2["代码"])
     if stock_type == "usd":
         df = ak.stock_us_spot_em()
@@ -37,7 +37,6 @@ def select_stock_by_divergence(all_stock_list, stock_type) -> list:
     result = []
     start_date = MyDateProcess.add_delta_from_now(-300)
     end_date = MyDateProcess.add_delta_from_now(0)
-    length = len(all_stock_list)
 
     if stock_type == "hk":
         func = ak.stock_hk_hist
@@ -48,8 +47,6 @@ def select_stock_by_divergence(all_stock_list, stock_type) -> list:
     else:
         raise ValueError("stock_type error")
     for index, symbol in enumerate(all_stock_list):
-        if index % 200 == 0:
-            logger.info(f"进度: {index} / {length}")
         try:
             dd = func(symbol=symbol, period="daily", start_date=start_date, end_date=end_date, adjust="")
 

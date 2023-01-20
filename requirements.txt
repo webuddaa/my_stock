@@ -2,10 +2,9 @@ mplfinance==0.12.7a17
 pandas==1.2.4
 numpy==1.20.1
 baostock==0.8.8
-jqdatasdk==1.8.10
 requests==2.25.1
 zmail==0.2.8
 loguru==0.5.3
 gunicorn==20.1.0
 Flask==1.1.2
-tushare==1.2.85
+akshare==1.7.48
