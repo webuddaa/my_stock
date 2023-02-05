@@ -1,0 +1,24 @@
+<html>
+<meta charset="UTF-8">
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <title>墨林期货系统</title>
+</head>
+<body>
+<div style="width:100%;text-align:center">
+    <h1>计算买入期货的最少资金</h1>
+    <form method="post" action="http://{{ip_port}}/cal_min_capital">
+        <br/>
+        品种代码: <input type="text" name="symbol"/><br>
+        <br/>
+        买入数量: <input type="text" name="exchange_cnt"/><br>
+        <br/>
+        买入价格: <input type="text" name="price"/><br>
+        <br/>
+        最大亏损点数: <input type="text" name="loss_point"/><br>
+        <br/>
+        <input type="submit" value="提交" name="submit"/>
+    </form>
+</div>
+</body>
+</html>

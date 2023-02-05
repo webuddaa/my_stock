@@ -8,7 +8,7 @@ from loguru import logger
 from flask import Flask, request, render_template
 
 from src.config.baostock_const import CandlestickInterval
-from src.config.common_config import SERVER_IP, SERVER_PORT
+from src.config.common_config import SERVER_IP, SERVER_PORT, FUTURE_GOODS
 from src.stock.get_result import plot_candlestick_for_stock, plot_candlestick_for_index
 
 app = Flask(__name__, template_folder=f"./templates")
@@ -77,6 +77,30 @@ def get_index_k_line():
     except Exception as e:
         logger.exception(e)
         return render_template("error.html")
+
+
+@app.route('/cal_min_capital', methods=["POST"])
+def cal_min_capital():
+    symbol = request.form.get('symbol', None)
+    exchange_cnt = request.form.get('exchange_cnt', None)
+    price = request.form.get('price', None)
+    loss_point = request.form.get('loss_point', None)
+
+    if not (symbol and exchange_cnt and price and loss_point):
+        return render_template("error.html")
+
+    symbol_info = FUTURE_GOODS.get(symbol.lower())
+
+    result = 0
+    if symbol.lower() == "jd":
+        result = int(exchange_cnt) * symbol_info["exchange_unit"] * (2 * int(price) * symbol_info["deposit_ratio"] + int(loss_point)) + 100
+    else:
+        result = int(exchange_cnt) * symbol_info["exchange_unit"] * (int(price) * symbol_info["deposit_ratio"] + int(loss_point)) + 100
+
+    result_dic = {
+        "symbol_name": symbol_info["symbol"],
+        "result": result}
+    return render_template("response_futures.html", **result_dic)
 
 
 if __name__ == '__main__':
