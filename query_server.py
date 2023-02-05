@@ -79,7 +79,7 @@ def get_index_k_line():
         return render_template("error.html")
 
 
-@app.route('/molin_futures', methods=["POST"])
+@app.route('/molin_futures', methods=["GET"])
 def molin_futures():
     return render_template("submit_futures_query.html")
 
