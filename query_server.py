@@ -81,7 +81,8 @@ def get_index_k_line():
 
 @app.route('/molin_futures', methods=["GET"])
 def molin_futures():
-    return render_template("submit_futures_query.html")
+    ip_port = f"{SERVER_IP}:{SERVER_PORT}"
+    return render_template("submit_futures_query.html", ip_port=ip_port)
 
 
 @app.route('/cal_min_capital', methods=["POST"])
