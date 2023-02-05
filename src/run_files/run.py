@@ -10,7 +10,7 @@ import baostock as bs
 from src.config.baostock_const import CandlestickInterval, Adjustment
 from src.stock.indicator import cal_macd
 from src.stock.my_plot import plot_candlestick
-from src.stock.query import query_candlestick, query_all_stock, query_candlestick_from_jq
+from src.stock.query import query_candlestick, query_all_stock
 from src.utils.date_utils import MyDateProcess, DateFormat
 
 pd.set_option('mode.chained_assignment', None)

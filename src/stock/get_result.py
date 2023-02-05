@@ -10,7 +10,7 @@ import pandas as pd
 from src.config.baostock_const import CandlestickInterval, Adjustment
 from src.stock.indicator import cal_macd
 from src.stock.my_plot import plot_candlestick
-from src.stock.query import query_candlestick, query_all_stock, query_candlestick_from_jq
+from src.stock.query import query_candlestick, query_all_stock
 from src.utils.date_utils import MyDateProcess, DateFormat
 
 pd.set_option('mode.chained_assignment', None)
@@ -79,16 +79,16 @@ def plot_candlestick_for_index(mid_date, frequency: CandlestickInterval, save_pa
     logger.info("成功保存K线图")
 
 
-def get_candlestick_from_jq():
-    """
-    从聚宽平台拉取上证指数的分钟级数据
-    """
-    security = "399001.XSHE"
-    count = 1000000
-    unit = "1m"
-    end_date = "2021-12-31 16:00:00"
-    df = query_candlestick_from_jq(count=count, unit=unit, end_date=end_date)
-
-    df.to_csv(f"../data/{security}_{unit}_sticks.csv", header=True, index=False)
-    logger.info("成功写入csv文件")
+# def get_candlestick_from_jq():
+#     """
+#     从聚宽平台拉取上证指数的分钟级数据
+#     """
+#     security = "399001.XSHE"
+#     count = 1000000
+#     unit = "1m"
+#     end_date = "2021-12-31 16:00:00"
+#     df = query_candlestick_from_jq(count=count, unit=unit, end_date=end_date)
+#
+#     df.to_csv(f"../data/{security}_{unit}_sticks.csv", header=True, index=False)
+#     logger.info("成功写入csv文件")
 
