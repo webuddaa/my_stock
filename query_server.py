@@ -105,6 +105,7 @@ def cal_min_capital():
 
     result_dic = {
         "symbol_name": symbol_info["symbol"],
+        "exchange_cnt": int(exchange_cnt),
         "result": result}
     return render_template("response_futures.html", **result_dic)
 
