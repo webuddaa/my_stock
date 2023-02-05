@@ -79,6 +79,11 @@ def get_index_k_line():
         return render_template("error.html")
 
 
+@app.route('/molin_futures', methods=["POST"])
+def molin_futures():
+    return render_template("submit_futures_query.html")
+
+
 @app.route('/cal_min_capital', methods=["POST"])
 def cal_min_capital():
     symbol = request.form.get('symbol', None)
