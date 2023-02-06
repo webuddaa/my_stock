@@ -104,10 +104,12 @@ def cal_min_capital():
         result = int(exchange_cnt) * symbol_info["exchange_unit"] * (int(price) * symbol_info["deposit_ratio"] + int(loss_point)) + 100
 
     lever = round(1 / symbol_info["deposit_ratio"], 2)
+    profit = int(exchange_cnt) * symbol_info["exchange_unit"] * 20 if symbol.lower() == "jd" else int(exchange_cnt) * symbol_info["exchange_unit"] * 10
     result_dic = {
         "symbol_name": symbol_info["symbol"],
         "exchange_cnt": int(exchange_cnt),
         "lever": lever,
+        "profit": profit,
         "result": round(result, 1)}
     return render_template("response_futures.html", **result_dic)
 
