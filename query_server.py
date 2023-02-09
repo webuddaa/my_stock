@@ -96,18 +96,21 @@ def cal_min_capital():
         return render_template("error.html")
 
     symbol_info = FUTURE_GOODS.get(symbol.lower())
+    exchange_cnt = float(exchange_cnt)
+    price = float(price)
+    loss_point = float(loss_point)
 
     result = 0
     if symbol.lower() == "jd":
-        result = int(exchange_cnt) * symbol_info["exchange_unit"] * (2 * int(price) * symbol_info["deposit_ratio"] + int(loss_point)) + 100
+        result = exchange_cnt * symbol_info["exchange_unit"] * (2 * price * symbol_info["deposit_ratio"] + loss_point) + 100
     else:
-        result = int(exchange_cnt) * symbol_info["exchange_unit"] * (int(price) * symbol_info["deposit_ratio"] + int(loss_point)) + 100
+        result = exchange_cnt * symbol_info["exchange_unit"] * (price * symbol_info["deposit_ratio"] + loss_point) + 100
 
     lever = round(1 / symbol_info["deposit_ratio"], 2)
-    profit = int(exchange_cnt) * symbol_info["exchange_unit"] * 20 if symbol.lower() == "jd" else int(exchange_cnt) * symbol_info["exchange_unit"] * 10
+    profit = exchange_cnt * symbol_info["exchange_unit"] * 20 if symbol.lower() == "jd" else exchange_cnt * symbol_info["exchange_unit"] * 10
     result_dic = {
         "symbol_name": symbol_info["symbol"],
-        "exchange_cnt": int(exchange_cnt),
+        "exchange_cnt": exchange_cnt,
         "lever": lever,
         "profit": profit,
         "result": round(result, 1)}
