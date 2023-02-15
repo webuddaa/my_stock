@@ -117,7 +117,7 @@ def cal_min_capital():
     return render_template("response_futures.html", **result_dic)
 
 
-if __name__ == '__main__':
-    logger.add("./log_files/runtime_{time}.log", rotation="100 MB")
-
-    app.run("0.0.0.0", SERVER_PORT)
+# if __name__ == '__main__':
+#     logger.add("./log_files/runtime_{time}.log", rotation="100 MB")
+#
+#     app.run("0.0.0.0", SERVER_PORT)
