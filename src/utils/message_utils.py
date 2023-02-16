@@ -42,7 +42,7 @@ def my_send_email(subject: str, content: str, recipients: List[str] or str, atta
         logger.exception(f"send email fail, error info: {e}")
 
 
-def send_wechat_msg(content_text):
+def send_wechat_msg(content_text, job_num_list=None):
     """
     发送消息到企业微信群中
     """
@@ -51,7 +51,7 @@ def send_wechat_msg(content_text):
 
     msg = {
         "msgtype": "text",
-        "text": {"content": content_text}
+        "text": {"content": content_text, "mentioned_list": job_num_list}
     }
     try:
         requests.post(url, data=json.dumps(msg), headers=headers)
