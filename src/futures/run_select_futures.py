@@ -3,15 +3,63 @@
 @date: 2023/2/16
 @file_name: run_select_futures.py
 """
-import akshare as ak
+import time
 import pandas as pd
 from datetime import datetime
 from loguru import logger
+import requests
+import json
+from retrying import retry
 
 from src.config.common_config import FUTURE_SYMBOLS
 from src.stock.divergence import Divergence
 from src.stock.indicator import cal_macd
 from src.utils.message_utils import send_wechat_msg
+
+
+@retry(stop_max_attempt_number=20)
+def futures_zh_minute_sina(symbol: str, period: str) -> pd.DataFrame:
+    """
+    :param symbol: AP2305
+    :param period: 1, 5, 15, 30, 60
+    """
+    url = "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/=/InnerFuturesNewService.getFewMinLine"
+    params = {"symbol": symbol, "type": period}
+    time.sleep(0.5)
+    r = requests.get(url, params=params)
+    temp_df = pd.DataFrame(json.loads(r.text.split("=(")[1].split(");")[0]))
+    temp_df.columns = ["Date", "Open", "High", "Low", "Close", "Volume", "Hold"]
+
+    temp_df["Open"] = pd.to_numeric(temp_df["Open"])
+    temp_df["High"] = pd.to_numeric(temp_df["High"])
+    temp_df["Low"] = pd.to_numeric(temp_df["Low"])
+    temp_df["Close"] = pd.to_numeric(temp_df["Close"])
+    temp_df["Volume"] = pd.to_numeric(temp_df["Volume"])
+    temp_df["Hold"] = pd.to_numeric(temp_df["Hold"])
+    temp_df2 = temp_df[["Date", "Open", "High", "Low", "Close", "Volume"]]
+    return temp_df2
+
+
+@retry(stop_max_attempt_number=20)
+def futures_zh_daily_sina(symbol: str) -> pd.DataFrame:
+    """
+    :param symbol: AP2305
+    """
+    url = "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/=/InnerFuturesNewService.getDailyKLine"
+    params = {"symbol": symbol}
+    time.sleep(0.5)
+    r = requests.get(url, params=params)
+    temp_df = pd.DataFrame(json.loads(r.text.split("=(")[1].split(");")[0]))
+    temp_df.columns = ["Date", "Open", "High", "Low", "Close", "Volume", "Hold", "Settle"]
+    temp_df["Open"] = pd.to_numeric(temp_df["Open"])
+    temp_df["High"] = pd.to_numeric(temp_df["High"])
+    temp_df["Low"] = pd.to_numeric(temp_df["Low"])
+    temp_df["Close"] = pd.to_numeric(temp_df["Close"])
+    temp_df["Volume"] = pd.to_numeric(temp_df["Volume"])
+    temp_df["Hold"] = pd.to_numeric(temp_df["Hold"])
+    temp_df["Settle"] = pd.to_numeric(temp_df["Settle"])
+    temp_df2 = temp_df[["Date", "Open", "High", "Low", "Close", "Volume"]]
+    return temp_df2
 
 
 def get_k_lines_temp(symbol: str, period: str) -> pd.DataFrame:
@@ -22,14 +70,9 @@ def get_k_lines_temp(symbol: str, period: str) -> pd.DataFrame:
     """
     try:
         if period == "day":
-            df = ak.futures_zh_daily_sina(symbol=symbol)
-            df2 = df[["date", "open", "high", "low", "close", "volume"]]
-            df2.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
+            return futures_zh_daily_sina(symbol)
         else:
-            df = ak.futures_zh_minute_sina(symbol=symbol, period=period)
-            df2 = df[["datetime", "open", "high", "low", "close", "volume"]]
-            df2.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
-        return df2
+            return futures_zh_minute_sina(symbol=symbol, period=period)
     except Exception as e:
         return pd.DataFrame()
 
