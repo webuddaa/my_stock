@@ -6,6 +6,7 @@
 import akshare as ak
 import pandas as pd
 from datetime import datetime
+from loguru import logger
 
 from src.config.common_config import FUTURE_SYMBOLS
 from src.stock.divergence import Divergence
@@ -66,6 +67,7 @@ def get_symbol_list(target: str) -> list:
 
 
 def fun(period):
+    logger.info(f"开始查询{period}级别背驰的合约")
     result = []
     for target in FUTURE_SYMBOLS:
         symbol_list = get_symbol_list(target)
@@ -74,7 +76,7 @@ def fun(period):
             temp_df = get_k_lines(symbol, period)
             if temp_df.shape[0] < 150:
                 continue
-
+            logger.info(f"symbol={symbol}, 数据集大小: {temp_df.shape[0]}")
             temp_df2 = cal_macd(temp_df)
             divergence = Divergence(temp_df2)
             divergence.merge_macd()
@@ -84,8 +86,10 @@ def fun(period):
 
 
 if __name__ == '__main__':
-    for period in ["day", "60", "30", "15", "5", "1"]:
-        res_list = fun(period)
-        content = f"级别:{period} | 底背驰的期货合约: {res_list}"
+    logger.add(f"./log_files/run_select_futures.log", retention='10 days')
+
+    for p in ["day", "60", "30", "15", "5", "1"]:
+        res_list = fun(p)
+        content = f"级别: {p} | 底背驰的期货合约: {res_list}"
         send_wechat_msg(content, job_num_list=["81145511"])
 
