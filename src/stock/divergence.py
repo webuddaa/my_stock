@@ -79,10 +79,10 @@ class Divergence:
         target_1 = self.data.iloc[-1]["macd_abs_sum"] < self.data.iloc[-3]["macd_abs_sum"]
         target_2 = self.data.iloc[-3]["diff_min"] < self.data.iloc[-1]["diff_min"]
         target_3 = self.data.iloc[-1]["macd_abs_max"] < self.data.iloc[-3]["macd_abs_max"]
-        # target_4 = self.data.iloc[-2]["diff_pos_cnt_ratio"] < 0.25
-        # target_5 = self.data.iloc[-2]["macd_cnt"] > 20
+        target_4 = self.data.iloc[-2]["diff_pos_cnt_ratio"] < 0.25
+        target_5 = self.data.iloc[-2]["macd_cnt"] > 10
 
-        return target_1 and target_2 and target_3
+        return target_1 and target_2 and target_3 and target_4 and target_5
 
     def peak_divergence(self):
         """

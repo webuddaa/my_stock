@@ -10,6 +10,7 @@ from loguru import logger
 import requests
 import json
 
+from src.config.common_config import ALL_FUTURE_SYMBOLS2
 from src.stock.divergence import Divergence
 from src.stock.indicator import cal_macd
 from src.utils.message_utils import send_wechat_msg
@@ -87,10 +88,13 @@ def get_k_lines(symbol: str, period: str):
 
 
 def convert_symbol(temp_symbol: str):
+    if not isinstance(temp_symbol, str):
+        return
     temp_symbol2 = temp_symbol.upper()
     a1 = ''.join(re.findall(r'[A-Za-z]', temp_symbol2))
-    a2 = temp_symbol2.split(a1)[1]
-    return f"{a1}2{a2}" if len(a2) == 3 else f"{a1}{a2}"
+    if a1 in ALL_FUTURE_SYMBOLS2:
+        a2 = temp_symbol2.split(a1)[1]
+        return f"{a1}2{a2}" if len(a2) == 3 else f"{a1}{a2}"
 
 
 def extract_symbol(x):
@@ -108,8 +112,8 @@ def get_symbol_list() -> list:
                        "手续费标准-开仓", "手续费标准-平昨", "手续费标准-平今", "每跳毛利", "手续费(开+平)",
                        "每跳净利", "备注", "-", "-"]
     temp_df["temp_symbol"] = temp_df["合约品种"].apply(extract_symbol)
-    temp_df2 = temp_df[["temp_symbol"]].dropna()
-    temp_df2["new_symbol"] = temp_df2["temp_symbol"].apply(convert_symbol)
+    temp_df["new_symbol"] = temp_df["temp_symbol"].apply(convert_symbol)
+    temp_df2 = temp_df[["new_symbol"]].dropna()
     return list(temp_df2["new_symbol"].unique())
 
 
@@ -134,6 +138,8 @@ if __name__ == '__main__':
     logger.add(f"./log_files/run_select_futures.log", retention='10 days')
 
     all_symbol_list = get_symbol_list()
+    logger.info(f"所需查询的合约数量: {len(all_symbol_list)}")
+
     for p in ["day", "60", "30", "15", "5", "1"]:
         res_list = fun(p, all_symbol_list)
         content = f"级别: {p} | 底背驰的期货合约: {res_list}"

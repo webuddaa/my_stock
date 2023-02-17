@@ -81,8 +81,14 @@ FUTURE_GOODS = {
     'si': {'symbol': '工业硅', 'exchange_unit': 5, 'deposit_ratio': 0.15}}
 
 # 所有的期货交易品种
-FUTURE_SYMBOLS = [
+ALL_FUTURE_SYMBOLS = [
     "CU", "AL", "ZN", "PB", "NI", "SN", "AU", "AG", "RB", "WR", "HC", "SS", "FU", "BU", "RU", "SP", "LU", "SC", "BC",
     "NR", "I", "J", "JM", "A", "B", "M", "Y", "P", "C", "CS", "RR", "JD", "LH", "L", "PP", "V", "EG", "EB", "PG", "FB",
     "BB", "CF", "CY", "AP", "TA", "MA", "SF", "SM", "SR", "CJ", "RM", "OI", "WH", "PM", "RI", "LR", "JR", "ZC", "FG",
     "PF", "SA", "UR", "PK", "RS", "SI", "IF", "IH", "IC", "IM", "TS", "TF", "T"]
+
+
+ALL_FUTURE_SYMBOLS2 = [
+    "RB", "HC", "SS", "FU", "BU", "RU", "SP", "NR", "I", "J", "JM", "A", "B", "M",
+    "Y", "P", "C", "CS", "JD", "LH", "L", "PP", "V", "EG", "EB", "PG", "CF", "CY",
+    "AP", "TA", "MA", "SF", "SM", "SR", "CJ", "RM", "OI", "ZC", "FG", "PF", "SA", "UR", "PK"]
