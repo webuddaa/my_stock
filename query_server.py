@@ -121,9 +121,9 @@ def cal_min_capital():
 
     result = 0
     if target == "JD":
-        result = exchange_cnt * exchange_unit * (2 * price * deposit + loss_point)
+        result = exchange_cnt * exchange_unit * (2 * price * deposit / 100 + loss_point)
     else:
-        result = exchange_cnt * exchange_unit * (price * deposit + loss_point)
+        result = exchange_cnt * exchange_unit * (price * deposit / 100 + loss_point)
 
     lever = round(100 / (deposit + 1), 2)
     profit = exchange_cnt * exchange_unit * 20 if target == "JD" else exchange_cnt * exchange_unit * 10
