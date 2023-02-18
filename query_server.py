@@ -4,11 +4,13 @@
 @file_name: query_server.py
 """
 import baostock as bs
+import re
 from loguru import logger
 from flask import Flask, request, render_template
 
 from src.config.baostock_const import CandlestickInterval
-from src.config.common_config import SERVER_IP, SERVER_PORT, FUTURE_GOODS
+from src.config.common_config import SERVER_IP, SERVER_PORT, FUTURE_GOODS, FUTURES_BASIS_INFO_MAP
+from src.futures.futures_basis_info import get_futures_basis_info
 from src.stock.get_result import plot_candlestick_for_stock, plot_candlestick_for_index
 
 app = Flask(__name__, template_folder=f"./templates")
@@ -89,31 +91,54 @@ def molin_futures():
 def cal_min_capital():
     symbol = request.form.get('symbol', None)
     exchange_cnt = request.form.get('exchange_cnt', None)
-    price = request.form.get('price', None)
     loss_point = request.form.get('loss_point', None)
 
-    if not (symbol and exchange_cnt and price and loss_point):
+    if not (symbol and exchange_cnt and loss_point):
         return render_template("error.html")
 
-    symbol_info = FUTURE_GOODS.get(symbol.lower())
-    exchange_cnt = float(exchange_cnt)
-    price = float(price)
+    if len(FUTURES_BASIS_INFO_MAP) == 0:
+        get_futures_basis_info()
+
+    future_code = symbol.upper()
+
+    if FUTURES_BASIS_INFO_MAP.get(future_code, -1) == -1:
+        return render_template("error.html")
+
+    target = ''.join(re.findall(r'[A-Z]', future_code))
+    symbol_info = FUTURE_GOODS.get(target)
+
+    symbol_name = symbol_info.get("symbol_name")
+    exchange_unit = symbol_info.get("exchange_unit")
+    exchange_cnt = int(exchange_cnt)
     loss_point = float(loss_point)
 
-    result = 0
-    if symbol.lower() == "jd":
-        result = exchange_cnt * symbol_info["exchange_unit"] * (2 * price * symbol_info["deposit_ratio"] + loss_point) + 100
-    else:
-        result = exchange_cnt * symbol_info["exchange_unit"] * (price * symbol_info["deposit_ratio"] + loss_point) + 100
+    basis_info_map = FUTURES_BASIS_INFO_MAP.get(future_code)
+    deposit = basis_info_map.get("交易所保证金")
+    price = basis_info_map.get("现价")
+    open_warehouse = basis_info_map.get("手续费-开仓")
+    release_yesterday = basis_info_map.get("手续费-平昨")
+    release_today = basis_info_map.get("手续费-平今")
 
-    lever = round(1 / symbol_info["deposit_ratio"], 2)
-    profit = exchange_cnt * symbol_info["exchange_unit"] * 20 if symbol.lower() == "jd" else exchange_cnt * symbol_info["exchange_unit"] * 10
+    result = 0
+    if target == "JD":
+        result = exchange_cnt * exchange_unit * (2 * price * deposit + loss_point)
+    else:
+        result = exchange_cnt * exchange_unit * (price * deposit + loss_point)
+
+    lever = round(100 / (deposit + 1), 2)
+    profit = exchange_cnt * exchange_unit * 20 if target == "JD" else exchange_cnt * exchange_unit * 10
     result_dic = {
-        "symbol_name": symbol_info["symbol"],
+        "symbol_name": symbol_name,
+        "future_code": future_code,
+        "now_price": price,
+        "deposit": f"{deposit}%",
+        "open_warehouse": open_warehouse,
+        "release_yesterday": release_yesterday,
+        "release_today": release_today,
         "exchange_cnt": exchange_cnt,
+        "result": round(result, 1),
         "lever": lever,
-        "profit": profit,
-        "result": round(result, 1)}
+        "profit": profit}
     return render_template("response_futures.html", **result_dic)
 
 

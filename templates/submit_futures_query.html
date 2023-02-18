@@ -1,7 +1,6 @@
 <html>
 <meta charset="UTF-8">
 <head>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
     <title>墨林期货系统</title>
 </head>
 <body>
@@ -9,15 +8,12 @@
     <h1>计算买入期货的最少资金</h1>
     <form method="post" action="http://{{ip_port}}/cal_min_capital">
         <br/>
-        品种代码: <input type="text" name="symbol"/><br>
+        <h4>合约代码示例: <font color=ff0000>AP2305 或 ap2305</font></h4>
+        <h2>合约代码: <input type="text" name="symbol" style="font-size:18px;width:150px;height:30px;"/><br></h2>
+        <h2>买入 <input type="text" name="exchange_cnt" style="font-size:18px;width:170px;height:30px;"/> 手</h2>
+        <h2>止损点数: <input type="text" name="loss_point" style="font-size:18px;width:150px;height:30px;"/></h2>
         <br/>
-        买入数量: <input type="text" name="exchange_cnt"/><br>
-        <br/>
-        买入价格: <input type="text" name="price"/><br>
-        <br/>
-        最大亏损点数: <input type="text" name="loss_point"/><br>
-        <br/>
-        <input type="submit" value="提交" name="submit"/>
+        <input type="submit" value="查 询" name="submit" style="font-size:22px;width:80px;height:40px;"/>
     </form>
 </div>
 </body>

@@ -10,6 +10,7 @@ class PrivateConfig:
 
     EMAIL_PASSWORD = "xxxxxxxx"
 
-    WEB_HOOK_KEY = "912c3401-1cd2-4a2b-a4d4-fc21e11915c3"
+    # 墨林金融
+    WEB_HOOK_KEY = "8165d8d4-591f-4862-be01-3f4281d2da39"
 
     GUGUDATA_KEY = "ZYKVFHBDMYRP"
