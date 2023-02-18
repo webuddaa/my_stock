@@ -67,7 +67,7 @@ def get_futures_basis_info():
 
     temp_df4 = temp_df3[["合约品种", "合约代码", "交易所保证金", "手续费-开仓", "手续费-平昨", "手续费-平今", "现价"]].reset_index(drop=True)
     update_futures_info_to_map(temp_df4)
-    temp_df4.to_csv(f"{PATH}/期货合约信息整理.csv", header=True, index=False, encoding='utf-8-sig')
+    temp_df4.to_csv(f"{PATH}/data/期货合约信息整理.csv", header=True, index=False, encoding='utf-8-sig')
 
 
 if __name__ == '__main__':
