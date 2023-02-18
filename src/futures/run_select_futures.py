@@ -27,19 +27,19 @@ def fun(period: str, all_symbols: list):
 
     for symbol in all_symbols:
         temp_df = get_k_lines(symbol, period)
-        if temp_df.shape[0] < 150:
+        if temp_df.shape[0] < 100:
             continue
 
-        val = temp_df.iloc[-60:]["Volume"].mean()
+        val = temp_df.iloc[-30:]["Volume"].median()
         if period == "day" and val < 1000:
             continue
-        if period == "60" and val < 500:
+        if period == "60" and val < 600:
             continue
-        if period == "30" and val < 200:
+        if period == "30" and val < 300:
             continue
-        if period == "15" and val < 100:
+        if period == "15" and val < 150:
             continue
-        if period == "5" and val < 30:
+        if period == "5" and val < 50:
             continue
         if period == "1" and val < 10:
             continue
