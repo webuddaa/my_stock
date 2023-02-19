@@ -17,7 +17,7 @@ from src.utils.message_utils import send_wechat_msg
 
 def get_symbol_list():
     basis_df = pd.read_csv(f"{PATH}/data/期货合约信息整理.csv")
-    basis_df2 = basis_df[basis_df["合约品种"].isin(ALL_FUTURE_SYMBOLS2)]
+    basis_df2 = basis_df[(basis_df["合约品种"].isin(ALL_FUTURE_SYMBOLS2)) & (basis_df["每手保证金"] < 9000)]
     return list(basis_df2["合约代码"].unique())
 
 
