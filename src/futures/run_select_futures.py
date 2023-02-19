@@ -23,7 +23,8 @@ def get_symbol_list():
 
 def fun(period: str, all_symbols: list):
     logger.info(f"开始查询{period}级别背驰的合约")
-    result = []
+    result_peak = []
+    result_bottom = []
 
     for symbol in all_symbols:
         temp_df = get_k_lines(symbol, period)
@@ -49,8 +50,10 @@ def fun(period: str, all_symbols: list):
         divergence = Divergence(temp_df2)
         divergence.merge_macd()
         if divergence.bottom_divergence():
-            result.append(symbol)
-    return result
+            result_bottom.append(symbol)
+        elif divergence.peak_divergence():
+            result_peak.append(symbol)
+    return result_peak, result_bottom
 
 
 if __name__ == '__main__':
@@ -64,6 +67,7 @@ if __name__ == '__main__':
     logger.info(f"所需查询的合约数量: {len(all_symbol_list)}")
 
     for p in args.period_list:
-        res_list = fun(p, all_symbol_list)
-        content = f"级别: {p} | 底背驰的期货合约: {res_list}"
-        send_wechat_msg(content, job_num_list=["81145511"])
+        result_peak, result_bottom = fun(p, all_symbol_list)
+        content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
+        content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"
+        send_wechat_msg(content)
