@@ -72,7 +72,7 @@ def get_k_lines_temp(symbol: str, period: str) -> pd.DataFrame:
 def get_k_lines(symbol: str, period: str):
     temp_df = get_k_lines_temp(symbol, period)
 
-    if temp_df.shape[0] >= 100:
+    if temp_df.shape[0] >= 200 or temp_df.shape[0] == 0:
         return temp_df
 
     year = symbol[-4:-2]

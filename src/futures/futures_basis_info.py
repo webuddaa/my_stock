@@ -31,7 +31,8 @@ def extract_symbol(x):
 
 def fun(x):
     if "万分之" in x:
-        return f"万分之[{x.split('/万分之')[0]}]"
+        tmp = x.split('/万分之')[0]
+        return "0" if tmp == "0" else f"万分之[{tmp}]"
     else:
         return x
 
@@ -54,18 +55,20 @@ def get_futures_basis_info():
     r = requests.get(url)
     temp_df = pd.read_html(r.text)[0]
 
-    temp_df2 = temp_df.iloc[:, [0, 1, 3, 6, 7, 8]]
+    temp_df2 = temp_df.iloc[:, [0, 1, 3, 5, 6, 7, 8]]
     temp_df2["temp_symbol"] = temp_df2[0].apply(extract_symbol)
     temp_df2["new_symbol"] = temp_df2["temp_symbol"].apply(convert_symbol)
     temp_df3 = temp_df2.dropna(subset=["new_symbol"])
-    temp_df3.columns = ["-", "现价", "交易所保证金", "手续费-开仓", "手续费-平昨", "手续费-平今", "temp_symbol", "合约代码"]
+    temp_df3.columns = ["-", "现价", "交易所保证金", "每手保证金", "手续费-开仓", "手续费-平昨", "手续费-平今", "temp_symbol", "合约代码"]
     temp_df3["手续费-开仓"] = temp_df3["手续费-开仓"].apply(fun)
     temp_df3["手续费-平昨"] = temp_df3["手续费-平昨"].apply(fun)
     temp_df3["手续费-平今"] = temp_df3["手续费-平今"].apply(fun)
     temp_df3["交易所保证金"] = temp_df3["交易所保证金"].apply(lambda x: float(x.split("%")[0]))
+    temp_df3["每手保证金"] = temp_df3["每手保证金"].apply(lambda x: float(x.split("元")[0]))
     temp_df3["合约品种"] = temp_df3["合约代码"].apply(lambda x: ''.join(re.findall(r'[A-Za-z]', x)))
+    temp_df3["现价"] = temp_df3["现价"].apply(float)
 
-    temp_df4 = temp_df3[["合约品种", "合约代码", "交易所保证金", "手续费-开仓", "手续费-平昨", "手续费-平今", "现价"]].reset_index(drop=True)
+    temp_df4 = temp_df3[["合约品种", "合约代码", "交易所保证金", "手续费-开仓", "手续费-平昨", "手续费-平今", "现价", "每手保证金"]].reset_index(drop=True)
     update_futures_info_to_map(temp_df4)
     temp_df4.to_csv(f"{PATH}/data/期货合约信息整理.csv", header=True, index=False, encoding='utf-8-sig')
 

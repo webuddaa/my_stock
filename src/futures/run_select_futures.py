@@ -27,7 +27,7 @@ def fun(period: str, all_symbols: list):
 
     for symbol in all_symbols:
         temp_df = get_k_lines(symbol, period)
-        if temp_df.shape[0] < 100:
+        if temp_df.shape[0] < 200:
             continue
 
         val = temp_df.iloc[-30:]["Volume"].median()
