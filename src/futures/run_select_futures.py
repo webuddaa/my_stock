@@ -71,3 +71,4 @@ if __name__ == '__main__':
         content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
         content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"
         send_wechat_msg(content)
+        send_wechat_msg(content2)
