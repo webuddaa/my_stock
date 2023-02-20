@@ -46,8 +46,7 @@ def update_futures_info_to_map(basis_df):
             "交易所保证金": float(row["交易所保证金"]),
             "手续费-开仓": row["手续费-开仓"],
             "手续费-平昨": row["手续费-平昨"],
-            "手续费-平今": row["手续费-平今"],
-            "现价": float(row["现价"])}
+            "手续费-平今": row["手续费-平今"]}
 
 
 def get_futures_basis_info():
