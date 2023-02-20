@@ -10,8 +10,6 @@ from flask import Flask, request, render_template
 
 from src.config.baostock_const import CandlestickInterval
 from src.config.common_config import SERVER_IP, SERVER_PORT, FUTURE_GOODS, FUTURES_BASIS_INFO_MAP
-from src.futures.future_k_lines import get_futures_current_pirce
-from src.futures.futures_basis_info import get_futures_basis_info
 from src.stock.get_result import plot_candlestick_for_stock, plot_candlestick_for_index
 
 app = Flask(__name__, template_folder=f"./templates")
@@ -97,9 +95,6 @@ def cal_min_capital():
     if not (symbol and exchange_cnt and loss_point):
         return render_template("error.html")
 
-    if len(FUTURES_BASIS_INFO_MAP) == 0:
-        get_futures_basis_info()
-
     future_code = symbol.upper()
 
     if FUTURES_BASIS_INFO_MAP.get(future_code, -1) == -1:
@@ -115,7 +110,7 @@ def cal_min_capital():
 
     basis_info_map = FUTURES_BASIS_INFO_MAP.get(future_code)
     deposit = basis_info_map.get("交易所保证金")
-    price = get_futures_current_pirce(future_code)
+    price = basis_info_map.get("现价")
     open_warehouse = basis_info_map.get("手续费-开仓")
     release_yesterday = basis_info_map.get("手续费-平昨")
     release_today = basis_info_map.get("手续费-平今")

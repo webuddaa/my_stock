@@ -9,4 +9,6 @@ nohup ./run_select_futures_temp.sh > aa.log 2>&1 &
 16 15 * * * /xiangfeng/my_stock/bin/run_select_futures_main.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
 
 
-2 5-22 * * * /xiangfeng/my_stock/bin/run_futures_basis_info.sh > /xiangfeng/my_stock/bin/aa2.log 2>&1 &
+2 5 * * * /xiangfeng/my_stock/bin/run_futures_basis_info.sh > /xiangfeng/my_stock/bin/aa2.log 2>&1 &
+
+0-55/5 9-23 * * * /xiangfeng/my_stock/bin/run_update_futures_price.sh > /xiangfeng/my_stock/bin/aa3.log 2>&1 &
