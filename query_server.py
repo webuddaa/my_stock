@@ -10,6 +10,7 @@ from flask import Flask, request, render_template
 
 from src.config.baostock_const import CandlestickInterval
 from src.config.common_config import SERVER_IP, SERVER_PORT, FUTURE_GOODS, FUTURES_BASIS_INFO_MAP
+from src.futures.futures_basis_info import get_futures_basis_info
 from src.stock.get_result import plot_candlestick_for_stock, plot_candlestick_for_index
 
 app = Flask(__name__, template_folder=f"./templates")
@@ -94,6 +95,9 @@ def cal_min_capital():
 
     if not (symbol and exchange_cnt and loss_point):
         return render_template("error.html")
+
+    if len(FUTURES_BASIS_INFO_MAP) == 0:
+        get_futures_basis_info()
 
     future_code = symbol.upper()
 
