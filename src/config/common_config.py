@@ -96,7 +96,12 @@ ALL_FUTURE_SYMBOLS = [
     "BB", "CF", "CY", "AP", "TA", "MA", "SF", "SM", "SR", "CJ", "RM", "OI", "WH", "PM", "RI", "LR", "JR", "ZC", "FG",
     "PF", "SA", "UR", "PK", "RS", "SI", "IF", "IH", "IC", "IM", "TS", "TF", "T"]
 
+# 白天可以交易的品种
 ALL_FUTURE_SYMBOLS2 = [
-    "RB", "HC", "SS", "FU", "BU", "RU", "SP", "NR", "I", "J", "JM", "A", "B", "M",
-    "Y", "P", "C", "CS", "JD", "LH", "L", "PP", "V", "EG", "EB", "PG", "CF", "CY",
-    "AP", "TA", "MA", "SF", "SM", "SR", "CJ", "RM", "OI", "ZC", "FG", "PF", "SA", "UR", "PK"]
+    "BU", "FU", "HC", "RB", "A", "B", "C", "CS", "EB", "EG", "JD", "L", "M", "PP", "V", "CF", "CJ",
+    "CY", "FG", "MA", "PF", "PK", "RM", "SA", "SF", "SM", "SR", "TA", "UR", "LU"]
+
+# 可以夜盘交易的品种
+NIGHT_FUTURE_SYMBOLS = [
+    "BU", "FU", "HC", "RB", "A", "B", "C", "CS", "EB", "EG", "L", "M", "PP", "V", "CF", "CY", "FG",
+    "MA", "PF", "RM", "SA", "SR", "TA", "LU"]

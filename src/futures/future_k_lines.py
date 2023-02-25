@@ -20,7 +20,7 @@ def _futures_zh_minute_sina(symbol: str, period: str) -> pd.DataFrame:
     """
     url = "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/=/InnerFuturesNewService.getFewMinLine"
     params = {"symbol": symbol, "type": period}
-    time.sleep(1.5)
+    time.sleep(1.2)
     r = requests.get(url, params=params)
     temp_df = pd.DataFrame(json.loads(r.text.split("=(")[1].split(");")[0]))
     temp_df.columns = ["Date", "Open", "High", "Low", "Close", "Volume", "Hold"]
@@ -41,7 +41,7 @@ def _futures_zh_daily_sina(symbol: str) -> pd.DataFrame:
     """
     url = "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/=/InnerFuturesNewService.getDailyKLine"
     params = {"symbol": symbol}
-    time.sleep(1.5)
+    time.sleep(1.2)
     r = requests.get(url, params=params)
     temp_df = pd.DataFrame(json.loads(r.text.split("=(")[1].split(");")[0]))
     temp_df.columns = ["Date", "Open", "High", "Low", "Close", "Volume", "Hold", "Settle"]

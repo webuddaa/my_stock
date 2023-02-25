@@ -4,12 +4,9 @@
 @file_name: run_select_futures.py
 """
 import pandas as pd
-from loguru import logger
-import json
-import argparse
 from datetime import datetime
 
-from src.config.common_config import ALL_FUTURE_SYMBOLS2, PATH
+from src.config.common_config import ALL_FUTURE_SYMBOLS2, PATH, NIGHT_FUTURE_SYMBOLS
 from src.futures.future_k_lines import get_k_lines
 from src.stock.divergence import Divergence
 from src.stock.indicator import cal_macd
@@ -39,7 +36,6 @@ def get_symbol_list(target_list):
 
 
 def fun(period: str, all_symbols: list):
-    logger.info(f"开始查询{period}级别背驰的合约")
     result_peak = []
     result_bottom = []
 
@@ -62,7 +58,6 @@ def fun(period: str, all_symbols: list):
         if period == "1" and val < 10:
             continue
 
-        logger.info(f"symbol={symbol}, 数据集大小: {temp_df.shape[0]}")
         temp_df2 = cal_macd(temp_df)
         divergence = Divergence(temp_df2)
         divergence.merge_macd()
@@ -74,18 +69,14 @@ def fun(period: str, all_symbols: list):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--period_list', type=json.loads)
-    args = parser.parse_args()
+    now_hour = datetime.now().hour
+    symbol_list = NIGHT_FUTURE_SYMBOLS if now_hour > 19 else ALL_FUTURE_SYMBOLS2
+    all_symbol_list = get_symbol_list(symbol_list)
 
-    logger.add(f"./log_files/run_select_futures.log", retention='10 days')
-
-    all_symbol_list = get_symbol_list(ALL_FUTURE_SYMBOLS2)
-    logger.info(f"所需查询的合约数量: {len(all_symbol_list)}")
-
-    for p in args.period_list:
-        result_peak, result_bottom = fun(p, all_symbol_list)
-        content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
-        content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"
-        send_wechat_msg(content)
-        send_wechat_msg(content2)
+    while True:
+        for p in ["5", "15"]:
+            result_peak, result_bottom = fun(p, all_symbol_list)
+            content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
+            content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"
+            send_wechat_msg(content)
+            send_wechat_msg(content2)
