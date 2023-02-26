@@ -8,7 +8,7 @@ from datetime import datetime
 
 from src.config.common_config import ALL_FUTURE_SYMBOLS2, PATH, NIGHT_FUTURE_SYMBOLS
 from src.futures.future_k_lines import get_k_lines
-from src.stock.divergence import Divergence
+from src.stock.divergence import cal_result
 from src.stock.indicator import cal_macd
 from src.utils.message_utils import send_wechat_msg
 
@@ -59,11 +59,12 @@ def fun(period: str, all_symbols: list):
             continue
 
         temp_df2 = cal_macd(temp_df)
-        divergence = Divergence(temp_df2)
-        divergence.merge_macd()
-        if divergence.bottom_divergence():
+        temp_type = cal_result(temp_df2)
+        if temp_type == "no":
+            continue
+        elif temp_type == "bottom":
             result_bottom.append(symbol)
-        elif divergence.peak_divergence():
+        else:
             result_peak.append(symbol)
     return result_peak, result_bottom
 
