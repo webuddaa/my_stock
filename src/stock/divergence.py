@@ -80,7 +80,7 @@ def bottom_divergence(temp_df, now_price) -> bool:
 
     b = float(temp_df.iloc[-2]["extreme_point"])
     a = float(temp_df.iloc[-3]["extreme_point"])
-    target_4 = abs(now_price - b) / abs(a - b) > 0.8
+    target_4 = abs(now_price - b) / abs(a - b) > 1
 
     return target_0 and target_1 and target_2 and target_3 and target_4
 
@@ -96,7 +96,7 @@ def peak_divergence(temp_df, now_price):
 
     b = float(temp_df.iloc[-2]["extreme_point"])
     a = float(temp_df.iloc[-3]["extreme_point"])
-    target_4 = abs(now_price - b) / abs(a - b) > 0.8
+    target_4 = abs(now_price - b) / abs(a - b) > 1
     return target_0 and target_1 and target_2 and target_3 and target_4
 
 

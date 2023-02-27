@@ -75,7 +75,7 @@ if __name__ == '__main__':
     all_symbol_list = get_symbol_list(symbol_list)
 
     while True:
-        for p in ["5", "5", "15"]:
+        for p in ["5"]:
             result_peak, result_bottom = fun(p, all_symbol_list)
             content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
             content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"

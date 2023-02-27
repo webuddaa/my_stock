@@ -1,19 +1,14 @@
 
 venv/bin/gunicorn -c gunicorn.conf.py query_server:app
 
-nohup ./run_select_futures_temp2.sh > aa.log 2>&1 &
+nohup ./run_select_futures_temp.sh > aa.log 2>&1 &
 
 16 5 * * * /xiangfeng/my_stock/bin/run_select_futures_main.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
 
 31 11 * * * /xiangfeng/my_stock/bin/run_select_futures_temp.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
 1 15 * * * /xiangfeng/my_stock/bin/run_select_futures_temp.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
 
-
-5 9 * * * /xiangfeng/my_stock/bin/run_select_futures_temp2.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
-
-35 13 * * * /xiangfeng/my_stock/bin/run_select_futures_temp2.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
-
-5 21 * * * /xiangfeng/my_stock/bin/run_select_futures_temp2.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
+1 21 * * * /xiangfeng/my_stock/bin/run_select_futures_temp2.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
 
 30 11 * * * /xiangfeng/my_stock/bin/run_kill_pid.sh
 0 15 * * * /xiangfeng/my_stock/bin/run_kill_pid.sh
