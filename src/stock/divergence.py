@@ -77,12 +77,10 @@ def bottom_divergence(temp_df, now_price) -> bool:
     target_1 = temp_df.iloc[-1]["macd_abs_sum"] < temp_df.iloc[-3]["macd_abs_sum"]
     target_2 = temp_df.iloc[-1]["diff_min"] > temp_df.iloc[-3]["diff_min"]
     target_3 = temp_df.iloc[-1]["macd_abs_max"] < temp_df.iloc[-3]["macd_abs_max"]
+    target_4 = (float(temp_df.iloc[-2]["diff_max"]) - float(temp_df.iloc[-3]["diff_min"])) / abs(float(temp_df.iloc[-3]["diff_min"])) > 0.5
+    target_5 = now_price < float(temp_df.iloc[-3]["extreme_point"])
 
-    b = float(temp_df.iloc[-2]["extreme_point"])
-    a = float(temp_df.iloc[-3]["extreme_point"])
-    target_4 = abs(now_price - b) / abs(a - b) > 1
-
-    return target_0 and target_1 and target_2 and target_3 and target_4
+    return target_0 and target_1 and target_2 and target_3 and target_4 and target_5
 
 
 def peak_divergence(temp_df, now_price):
@@ -93,11 +91,9 @@ def peak_divergence(temp_df, now_price):
     target_1 = temp_df.iloc[-1]["macd_abs_sum"] < temp_df.iloc[-3]["macd_abs_sum"]
     target_2 = temp_df.iloc[-1]["diff_max"] < temp_df.iloc[-3]["diff_max"]
     target_3 = temp_df.iloc[-1]["macd_abs_max"] < temp_df.iloc[-3]["macd_abs_max"]
-
-    b = float(temp_df.iloc[-2]["extreme_point"])
-    a = float(temp_df.iloc[-3]["extreme_point"])
-    target_4 = abs(now_price - b) / abs(a - b) > 1
-    return target_0 and target_1 and target_2 and target_3 and target_4
+    target_4 = (float(temp_df.iloc[-3]["diff_max"]) - float(temp_df.iloc[-2]["diff_min"])) / float(temp_df.iloc[-3]["diff_max"]) > 0.5
+    target_5 = now_price > float(temp_df.iloc[-3]["extreme_point"])
+    return target_0 and target_1 and target_2 and target_3 and target_4 and target_5
 
 
 def cal_result(temp_df) -> str:
