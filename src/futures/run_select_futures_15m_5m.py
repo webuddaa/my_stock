@@ -77,7 +77,9 @@ if __name__ == '__main__':
     while True:
         for p in ["5"]:
             result_peak, result_bottom = fun(p, all_symbol_list)
-            content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
-            content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"
-            send_wechat_msg(content)
-            send_wechat_msg(content2)
+            if len(result_peak) > 0:
+                content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"
+                send_wechat_msg(content2, job_num_list=["81145511"])
+            if len(result_bottom) > 0:
+                content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
+                send_wechat_msg(content, job_num_list=["81145511"])
