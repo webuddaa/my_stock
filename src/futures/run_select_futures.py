@@ -86,7 +86,9 @@ if __name__ == '__main__':
 
     for p in args.period_list:
         result_peak, result_bottom = fun(p, all_symbol_list)
-        content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
-        content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"
-        send_wechat_msg(content)
-        send_wechat_msg(content2)
+        if len(result_bottom) > 0:
+            content = f"级别: {p} | 可以做多的期货合约: {result_bottom}"
+            send_wechat_msg(content)
+        if len(result_peak) > 0:
+            content2 = f"级别: {p} | 可以做空的期货合约: {result_peak}"
+            send_wechat_msg(content2)

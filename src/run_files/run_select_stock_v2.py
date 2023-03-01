@@ -7,7 +7,7 @@ import akshare as ak
 import pandas as pd
 from loguru import logger
 
-from src.stock.divergence import Divergence
+from src.stock.divergence import cal_result
 from src.stock.indicator import cal_macd
 from src.utils.date_utils import MyDateProcess
 from src.utils.message_utils import send_wechat_msg
@@ -57,9 +57,8 @@ def select_stock_by_divergence(all_stock_list, stock_type) -> list:
             temp_df = dd[["日期", "开盘", "最高", "最低", "收盘", "成交量"]]
             temp_df.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
             temp_df2 = cal_macd(temp_df)
-            divergence = Divergence(temp_df2)
-            divergence.merge_macd()
-            if divergence.bottom_divergence():
+            temp_type = cal_result(temp_df2)
+            if temp_type == "bottom":
                 result.append(symbol)
         except Exception as e:
             logger.info(f"symbol={symbol}, error_info: {e}")

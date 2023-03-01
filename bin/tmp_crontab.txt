@@ -14,7 +14,7 @@ nohup ./run_select_futures_temp2.sh > aa.log 2>&1 &
 0 15 * * * /xiangfeng/my_stock/bin/run_kill_pid.sh
 0 23 * * * /xiangfeng/my_stock/bin/run_kill_pid.sh
 
-
+10 20 * * * /xiangfeng/my_stock/bin/run_select_stock.sh
 
 2 5 * * * /xiangfeng/my_stock/bin/run_futures_basis_info.sh > /xiangfeng/my_stock/bin/aa2.log 2>&1 &
 
