@@ -98,10 +98,14 @@ ALL_FUTURE_SYMBOLS = [
 
 # 白天可以交易的品种
 ALL_FUTURE_SYMBOLS2 = [
-    "BU", "FU", "HC", "RB", "A", "B", "C", "CS", "EB", "EG", "JD", "L", "M", "PP", "V", "CF", "CJ",
-    "CY", "FG", "MA", "PF", "PK", "RM", "SA", "SF", "SM", "SR", "TA", "UR", "LU"]
+    "BU", "FU", "HC", "RB", "C", "CS", "EB", "EG", "JD", "L", "PP", "V", "CF", "CJ",
+    "CY", "FG", "MA", "PF", "SA", "SF", "SM", "SR", "UR"]
 
 # 可以夜盘交易的品种
 NIGHT_FUTURE_SYMBOLS = [
-    "BU", "FU", "HC", "RB", "A", "B", "C", "CS", "EB", "EG", "L", "M", "PP", "V", "CF", "CY", "FG",
-    "MA", "PF", "RM", "SA", "SR", "TA", "LU"]
+    "BU", "FU", "HC", "RB", "C", "CS", "EB", "EG", "L", "PP", "V", "CF", "CY", "FG",
+    "MA", "PF", "SA", "SR"]
+
+
+# 暂时没有交易权限
+# ["RM", "PK", "TA", "OI", "A", "B", "M", "P", "Y", "I", "SC", "NR", "LU", "BC"]
