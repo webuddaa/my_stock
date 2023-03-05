@@ -56,6 +56,10 @@ def select_stock_by_divergence(all_stock_list, stock_type) -> list:
 
             temp_df = dd[["日期", "开盘", "最高", "最低", "收盘", "成交量"]]
             temp_df.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
+
+            val = temp_df.iloc[-5:]["Volume"].mean()
+            if val < 100000:
+                continue
             temp_df2 = cal_macd(temp_df)
             temp_type = cal_result(temp_df2)
             if temp_type == "bottom":
