@@ -69,17 +69,26 @@ def merge_macd(temp_df):
 
 def bottom_divergence(temp_df, now_price) -> bool:
     """底背驰"""
+    prev_low_price = float(temp_df.iloc[-3]["extreme_point"])
+    prev_high_price = float(temp_df.iloc[-2]["extreme_point"])
+
+    prev_high_diff = float(temp_df.iloc[-2]["diff_max"])
+    prev_low_diff = float(temp_df.iloc[-3]["diff_min"])
+    now_low_diff = float(temp_df.iloc[-1]["diff_min"])
+
+    ratio_1 = (prev_high_diff - prev_low_diff) / abs(prev_low_diff)
+    ratio_2 = (prev_high_diff - now_low_diff) / (prev_high_diff - prev_low_diff)
+
     target_0 = temp_df.iloc[-1]["macd_sum"] < 0
     target_1 = temp_df.iloc[-1]["macd_abs_sum"] * 2 < temp_df.iloc[-3]["macd_abs_sum"]
-    target_2 = temp_df.iloc[-1]["diff_min"] > temp_df.iloc[-3]["diff_min"]
-    target_3 = temp_df.iloc[-1]["macd_abs_max"] < temp_df.iloc[-3]["macd_abs_max"]
-    target_4 = (float(temp_df.iloc[-2]["diff_max"]) - float(temp_df.iloc[-3]["diff_min"])) / abs(float(temp_df.iloc[-3]["diff_min"])) > 0.6
-    target_5 = now_price < float(temp_df.iloc[-3]["extreme_point"])
-    final_target = target_0 and target_1 and target_2 and target_3 and target_4 and target_5
+    target_2 = ratio_2 < 0.8
+    target_3 = 0.8 < ratio_1 < 1.2
+    target_4 = (prev_high_price - now_price) / (prev_high_price - prev_low_price) > 0.7
+    final_target = target_0 and target_1 and target_2 and target_3 and target_4
 
-    target_6 = temp_df.iloc[-1]["macd_abs_sum"] * 2 < temp_df.iloc[-3]["macd_abs_sum"] < temp_df.iloc[-5]["macd_abs_sum"]
-    target_7 = temp_df.iloc[-1]["diff_min"] > temp_df.iloc[-3]["diff_min"] > temp_df.iloc[-5]["diff_min"]
-    final_target2 = target_0 and target_6 and target_7
+    target_5 = temp_df.iloc[-1]["macd_abs_sum"] * 2 < temp_df.iloc[-3]["macd_abs_sum"] < temp_df.iloc[-5]["macd_abs_sum"]
+    target_6 = 0 > temp_df.iloc[-1]["diff_min"] > temp_df.iloc[-3]["diff_min"] > temp_df.iloc[-5]["diff_min"]
+    final_target2 = target_0 and target_5 and target_6
 
     return final_target or final_target2
 
@@ -88,17 +97,27 @@ def peak_divergence(temp_df, now_price) -> bool:
     """
     顶背驰
     """
+    prev_low_price = float(temp_df.iloc[-2]["extreme_point"])
+    prev_high_price = float(temp_df.iloc[-3]["extreme_point"])
+
+    prev_low_diff = float(temp_df.iloc[-2]["diff_min"])
+    prev_high_diff = float(temp_df.iloc[-3]["diff_max"])
+    now_high_diff = float(temp_df.iloc[-1]["diff_max"])
+
+    ratio_1 = (prev_high_diff - prev_low_diff) / abs(prev_high_diff)
+    ratio_2 = (now_high_diff - prev_low_diff) / (prev_high_diff - prev_low_diff)
+
     target_0 = temp_df.iloc[-1]["macd_sum"] > 0
     target_1 = temp_df.iloc[-1]["macd_abs_sum"] * 2 < temp_df.iloc[-3]["macd_abs_sum"]
-    target_2 = temp_df.iloc[-1]["diff_max"] < temp_df.iloc[-3]["diff_max"]
-    target_3 = temp_df.iloc[-1]["macd_abs_max"] < temp_df.iloc[-3]["macd_abs_max"]
-    target_4 = (float(temp_df.iloc[-3]["diff_max"]) - float(temp_df.iloc[-2]["diff_min"])) / float(temp_df.iloc[-3]["diff_max"]) > 0.6
-    target_5 = now_price > float(temp_df.iloc[-3]["extreme_point"])
-    final_target = target_0 and target_1 and target_2 and target_3 and target_4 and target_5
+    target_2 = ratio_2 < 0.8
+    target_3 = 0.8 < ratio_1 < 1.2
+    target_4 = (now_price - prev_low_price) / (prev_high_price - prev_low_price) > 0.7
 
-    target_6 = temp_df.iloc[-1]["macd_abs_sum"] * 2 < temp_df.iloc[-3]["macd_abs_sum"] < temp_df.iloc[-5]["macd_abs_sum"]
-    target_7 = temp_df.iloc[-1]["diff_max"] < temp_df.iloc[-3]["diff_max"] < temp_df.iloc[-5]["diff_max"]
-    final_target2 = target_0 and target_6 and target_7
+    final_target = target_0 and target_1 and target_2 and target_3 and target_4
+
+    target_5 = temp_df.iloc[-1]["macd_abs_sum"] * 2 < temp_df.iloc[-3]["macd_abs_sum"] < temp_df.iloc[-5]["macd_abs_sum"]
+    target_6 = 0 < temp_df.iloc[-1]["diff_max"] < temp_df.iloc[-3]["diff_max"] < temp_df.iloc[-5]["diff_max"]
+    final_target2 = target_0 and target_5 and target_6
 
     return final_target or final_target2
 
