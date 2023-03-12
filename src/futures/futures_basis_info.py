@@ -102,10 +102,12 @@ def get_futures_basis_info():
     df2 = get_futures_basis_info_temp2()
     df3 = pd.merge(df1, df2, on="合约品种")
     update_futures_info_to_map(df3)
+    df3["最小跳动的浮亏比例"] = df3["最小变动价位"] / df3["现价"] * 100 / (df3["交易所保证金"] + 1)
     df4 = df3[["品种中文", "合约品种", "合约代码", "交易所保证金",
                "手续费-开仓", "手续费-平昨", "手续费-平今",
-               "现价", "每手保证金", "手续费-开加平", "合约乘数", "最小变动价位", "是否主力合约"]]
-    df4["最小跳动的浮亏比例"] = df4["最小变动价位"] / df4["现价"] * 100 / (df4["交易所保证金"] + 1)
+               "现价", "每手保证金", "手续费-开加平", "合约乘数",
+               "最小变动价位", "最小跳动的浮亏比例", "是否主力合约"]]
+
     df4.to_csv(f"{PATH}/data/期货合约信息整理.csv", header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(f"{PATH}/data/期货合约信息整理.csv")
 
