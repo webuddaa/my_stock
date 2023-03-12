@@ -42,6 +42,38 @@ def my_send_email(subject: str, content: str, recipients: List[str] or str, atta
         logger.exception(f"send email fail, error info: {e}")
 
 
+def get_media_id(file_path, hook_key=PrivateConfig.WEB_HOOK_KEY):
+    """
+    :param hook_key:
+    :param file_path: /Users/xiangfeng/Desktop/四川仓内拣货效率对比.csv
+    """
+    url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/upload_media?key={hook_key}&type=file"
+    headers = {"Content-Type": "multipart/form-data"}
+    files = {"file": open(file_path, "rb")}
+    try:
+        resp = requests.post(url, headers=headers, files=files)
+        media_id = resp.json().get("media_id")
+        return media_id
+    except Exception as e:
+        logger.info(f"send upload file failed, error info: {e}")
+
+
+def send_wechat_file(file_path, hook_key=PrivateConfig.WEB_HOOK_KEY):
+    """
+    发送文件到企业微信群中
+    """
+    url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={hook_key}"
+    headers = {"Content-Type": "application/json;charset=utf-8"}
+    media_id = get_media_id(file_path, hook_key)
+    msg = {
+        "msgtype": "file",
+        "file": {"media_id": media_id}}
+    try:
+        requests.post(url, data=json.dumps(msg), headers=headers)
+    except Exception as e:
+        logger.info(f"send wechat fail, error info: {e}")
+
+
 def send_wechat_msg(content_text, job_num_list=None):
     """
     发送消息到企业微信群中
