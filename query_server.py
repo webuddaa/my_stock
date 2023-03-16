@@ -7,6 +7,7 @@ import baostock as bs
 import re
 from loguru import logger
 from flask import Flask, request, render_template
+import numpy as np
 
 from src.config.baostock_const import CandlestickInterval
 from src.config.common_config import SERVER_IP, SERVER_PORT, FUTURE_GOODS, FUTURES_BASIS_INFO_MAP
@@ -140,6 +141,32 @@ def cal_min_capital():
         "lever": lever,
         "profit": profit}
     return render_template("response_futures.html", **result_dic)
+
+
+@app.route('/molin_long_time_for_profit', methods=["GET"])
+def molin_long_time_for_profit():
+    ip_port = f"{SERVER_IP}:{SERVER_PORT}"
+    return render_template("submit_long_time_for_profit.html", ip_port=ip_port)
+
+
+@app.route('/cal_long_time_for_profit', methods=["POST"])
+def cal_long_time_for_profit():
+    percent = request.form.get('percent', None)
+    n = request.form.get('day', None)
+
+    if not (percent and n):
+        return render_template("error.html")
+
+    percent_point = float(percent)
+    days = int(n)
+
+    res = round(float(np.power(1 + percent_point / 100, days)), 2)
+
+    result_dic = {
+        "percent_point": f"{percent_point}%",
+        "days": days,
+        "res": res}
+    return render_template("response_long_time_for_profit.html", **result_dic)
 
 
 # if __name__ == '__main__':
