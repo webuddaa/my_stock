@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from loguru import logger
 
 from src.config.common_config import FUTURES_BASIS_INFO_MAP, PATH
-from src.utils.message_utils import send_wechat_msg, send_wechat_file
+from src.utils.message_utils import send_wechat_msg, send_wechat_file, my_send_email
 
 
 def convert_symbol(temp_symbol: str):
@@ -108,8 +108,11 @@ def get_futures_basis_info():
                "现价", "每手保证金", "手续费-开加平", "合约乘数",
                "最小变动价位", "最小跳动的浮亏比例", "是否主力合约"]]
 
-    df4.to_csv(f"{PATH}/data/期货合约信息整理.csv", header=True, index=False, encoding='utf-8-sig')
-    send_wechat_file(f"{PATH}/data/期货合约信息整理.csv")
+    temp_path = f"{PATH}/data/期货合约信息整理.csv"
+    df4.to_csv(temp_path, header=True, index=False, encoding='utf-8-sig')
+    send_wechat_file(temp_path)
+
+    my_send_email("期货合约信息整理", "buddaa", "buddaa@163.com", attachments_path=temp_path)
 
 
 if __name__ == '__main__':
