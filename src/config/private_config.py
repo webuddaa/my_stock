@@ -6,9 +6,9 @@
 
 
 class PrivateConfig:
-    EMAIL_ID = "xuxf5@yonghui.cn"
+    EMAIL_ID = "buddaa@163.com"
 
-    EMAIL_PASSWORD = "xdyXXF99"
+    EMAIL_PASSWORD = "xdyxxf99"
 
     # 墨林金融
     WEB_HOOK_KEY = "8165d8d4-591f-4862-be01-3f4281d2da39"

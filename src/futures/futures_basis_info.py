@@ -112,7 +112,7 @@ def get_futures_basis_info():
     df4.to_csv(temp_path, header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(temp_path)
 
-    my_send_email("期货合约信息整理", "buddaa", "buddaa@163.com", attachments_path=temp_path)
+    my_send_email("期货合约信息整理", "buddaa", "buddaa@126.com", attachments_path=temp_path)
 
 
 if __name__ == '__main__':
