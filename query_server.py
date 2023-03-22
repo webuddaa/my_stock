@@ -144,7 +144,7 @@ def cal_min_capital():
         "fee": fee,
         "multiplier": multiplier,
         "min_hop": min_hop,
-        "min_hop_loss_ratio": min_hop_loss_ratio,
+        "min_hop_loss_ratio": format(min_hop_loss_ratio, ".3%"),
         "basis_hop_cnt": basis_hop_cnt,
     }
 
