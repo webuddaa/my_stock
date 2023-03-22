@@ -44,11 +44,17 @@ def update_futures_info_to_map(basis_df):
     FUTURES_BASIS_INFO_MAP.clear()
     for _, row in basis_df.iterrows():
         FUTURES_BASIS_INFO_MAP[row["合约代码"]] = {
+            "品种中文": row["品种中文"],
             "交易所保证金": float(row["交易所保证金"]),
             "手续费-开仓": row["手续费-开仓"],
             "手续费-平昨": row["手续费-平昨"],
             "手续费-平今": row["手续费-平今"],
-            "现价": float(row["现价"])}
+            "现价": float(row["现价"]),
+            "每手保证金": float(row["每手保证金"]),
+            "手续费-开加平": float(row["手续费-开加平"]),
+            "合约乘数": int(row["合约乘数"]),
+            "最小变动价位": float(row["最小变动价位"]),
+            "最小跳动的浮亏比例": float(row["最小跳动的浮亏比例"])}
 
 
 def get_futures_basis_info_temp1():
@@ -101,13 +107,13 @@ def get_futures_basis_info():
     df1 = get_futures_basis_info_temp1()
     df2 = get_futures_basis_info_temp2()
     df3 = pd.merge(df1, df2, on="合约品种")
-    update_futures_info_to_map(df3)
     df3["最小跳动的浮亏比例"] = df3["最小变动价位"] / df3["现价"] * 100 / (df3["交易所保证金"] + 1)
     df4 = df3[["品种中文", "合约品种", "合约代码", "交易所保证金",
                "手续费-开仓", "手续费-平昨", "手续费-平今",
                "现价", "每手保证金", "手续费-开加平", "合约乘数",
                "最小变动价位", "最小跳动的浮亏比例", "是否主力合约"]]
 
+    update_futures_info_to_map(df4)
     temp_path = f"{PATH}/data/期货合约信息整理.csv"
     df4.to_csv(temp_path, header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(temp_path)

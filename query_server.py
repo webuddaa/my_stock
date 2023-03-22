@@ -5,6 +5,7 @@
 """
 import baostock as bs
 import re
+import math
 from loguru import logger
 from flask import Flask, request, render_template
 import numpy as np
@@ -106,28 +107,28 @@ def cal_min_capital():
         return render_template("error.html")
 
     target = ''.join(re.findall(r'[A-Z]', future_code))
-    symbol_info = FUTURE_GOODS.get(target)
 
-    symbol_name = symbol_info.get("symbol_name")
-    exchange_unit = symbol_info.get("exchange_unit")
     exchange_cnt = int(exchange_cnt)
-    loss_point = float(loss_point)
 
     basis_info_map = FUTURES_BASIS_INFO_MAP.get(future_code)
+    symbol_name = basis_info_map.get("品种中文")
     deposit = basis_info_map.get("交易所保证金")
     price = basis_info_map.get("现价")
     open_warehouse = basis_info_map.get("手续费-开仓")
     release_yesterday = basis_info_map.get("手续费-平昨")
     release_today = basis_info_map.get("手续费-平今")
 
-    result = 0
-    if target == "JD":
-        result = exchange_cnt * exchange_unit * (2 * price * deposit / 100 + loss_point)
-    else:
-        result = exchange_cnt * exchange_unit * (price * deposit / 100 + loss_point)
+    fee = basis_info_map.get("手续费-开加平")
+    multiplier = basis_info_map.get("合约乘数")
+    min_hop = basis_info_map.get("最小变动价位")
+    min_hop_loss_ratio = basis_info_map.get("最小跳动的浮亏比例")
+    deposit_val = basis_info_map.get("每手保证金")
+
+    # 赚取1%，所需要的跳数
+    basis_hop_cnt = math.ceil(deposit_val * 0.01 / (min_hop * multiplier))
 
     lever = round(100 / (deposit + 1), 2)
-    profit = exchange_cnt * exchange_unit * 20 if target == "JD" else exchange_cnt * exchange_unit * 10
+    profit = exchange_cnt * min_hop * multiplier * 20 if target == "JD" else exchange_cnt * min_hop * multiplier * 10
     result_dic = {
         "symbol_name": symbol_name,
         "future_code": future_code,
@@ -137,9 +138,16 @@ def cal_min_capital():
         "release_yesterday": release_yesterday,
         "release_today": release_today,
         "exchange_cnt": exchange_cnt,
-        "result": round(result, 1),
+        "result": round(deposit_val, 1),
         "lever": lever,
-        "profit": profit}
+        "profit": profit,
+        "fee": fee,
+        "multiplier": multiplier,
+        "min_hop": min_hop,
+        "min_hop_loss_ratio": min_hop_loss_ratio,
+        "basis_hop_cnt": basis_hop_cnt,
+    }
+
     return render_template("response_futures.html", **result_dic)
 
 
