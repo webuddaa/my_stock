@@ -9,6 +9,7 @@ import akshare as ak
 
 
 if __name__ == '__main__':
-    futures_rule_df = ak.futures_rule(date="20230310")
+    # futures_rule_df = ak.futures_rule(date="20230310")
+    # df = ak.futures_zh_spot(symbol='V2309,P2309,V2307', market="CF", adjust='0')
     df = ak.futures_zh_spot(symbol='V2309,P2309,V2307', market="CF", adjust='0')
-    df = ak.futures_zh_spot(symbol='V2309,P2309,V2307', market="CF", adjust='0')
+    print(df)
