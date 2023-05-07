@@ -10,9 +10,8 @@ import pandas as pd
 import re
 from datetime import datetime, timedelta
 from loguru import logger
-from py_mini_racer import py_mini_racer
 
-from src.config.common_config import PATH, FUTURES_BASIS_INFO_MAP
+from src.config.common_config import FUTURES_BASIS_INFO_MAP
 from src.utils.message_utils import send_wechat_msg, send_wechat_file, my_send_email
 
 
@@ -43,13 +42,11 @@ def futures_zh_spot(symbol: str = "V2209", market: str = "CF") -> pd.DataFrame:
     :param market: CF 为商品期货
     :type market: str
     """
-    file_data = "Math.round(Math.random() * 2147483648).toString(16)"
-    ctx = py_mini_racer.MiniRacer()
-    rn_code = ctx.eval(file_data)
-    subscribe_list = ",".join(
-        ["nf_" + item.strip() for item in symbol.split(",")]
-    )
-    url = f"https://hq.sinajs.cn/rn={rn_code}&list={subscribe_list}"
+    # file_data = "Math.round(Math.random() * 2147483648).toString(16)"
+    # ctx = py_mini_racer.MiniRacer()
+    # rn_code = ctx.eval(file_data)
+    subscribe_list = ",".join(["nf_" + item.strip() for item in symbol.split(",")])
+    url = f"https://hq.sinajs.cn/list={subscribe_list}"
     headers = {
         "Accept": "*/*",
         "Accept-Encoding": "gzip, deflate",
@@ -62,13 +59,7 @@ def futures_zh_spot(symbol: str = "V2209", market: str = "CF") -> pd.DataFrame:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
     }
     r = requests.get(url, headers=headers)
-    data_df = pd.DataFrame(
-        [
-            item.strip().split("=")[1].split(",")
-            for item in r.text.split(";")
-            if item.strip() != ""
-        ]
-    )
+    data_df = pd.DataFrame([item.strip().split("=")[1].split(",") for item in r.text.split(";") if item.strip() != ""])
     data_df.iloc[:, 0] = data_df.iloc[:, 0].str.replace('"', "")
     data_df.iloc[:, -1] = data_df.iloc[:, -1].str.replace('"', "")
 
@@ -332,7 +323,7 @@ def get_futures_basis_info():
     final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "现价", "成交量", "每手保证金", "手续费", "最小跳动的浮亏比例", "是否主力合约"]]
 
     update_futures_info_to_map(final_df2)
-    temp_path = f"{PATH}/data/期货合约信息整理.csv"
+    temp_path = f"期货合约信息整理.csv"
     final_df2.to_csv(temp_path, header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(temp_path)
 
