@@ -56,7 +56,7 @@ def futures_zh_spot(symbol: str = "V2209", market: str = "CF") -> pd.DataFrame:
         "Pragma": "no-cache",
         "Proxy-Connection": "keep-alive",
         "Referer": "http://vip.stock.finance.sina.com.cn/",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
+        # "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
     }
     r = requests.get(url, headers=headers)
     data_df = pd.DataFrame([item.strip().split("=")[1].split(",") for item in r.text.split(";") if item.strip() != ""])
