@@ -1,0 +1,16 @@
+.idea
+.DS_Store
+*/.idea
+*/.cache
+/__pycache__
+*/__pycache__
+**/__pycache__
+jupyter/
+*/.ipynb_checkpoints/
+
+/venv
+/log_files
+/static
+
+
+
