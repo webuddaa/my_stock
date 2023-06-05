@@ -320,14 +320,18 @@ def get_futures_basis_info():
     final_df["每手保证金"] = final_df["现价"] * final_df["合约乘数"] * final_df["交易所保证金"] / 100
     final_df["手续费"] = final_df.apply(lambda row: cal_fea(row["手续费-开仓"], row["手续费-平今"], row["现价"], row["合约乘数"]), axis=1)
     final_df["最小跳动的浮亏比例"] = final_df["最小变动价位"] / final_df["现价"] * 100 / (final_df["交易所保证金"] + 1)
-    final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "现价", "成交量", "每手保证金", "手续费", "最小跳动的浮亏比例", "是否主力合约"]]
+    final_df["近似成交额"] = final_df["现价"] * final_df["成交量"]
+    final_df["手续费/保证金"] = final_df["手续费"] / final_df["每手保证金"]
+    final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "现价", "成交量", "近似成交额", "每手保证金", "手续费", "最小跳动的浮亏比例", "手续费/保证金", "是否主力合约"]]
 
     update_futures_info_to_map(final_df2)
-    temp_path = f"期货合约信息整理.csv"
-    final_df2.to_csv(temp_path, header=True, index=False, encoding='utf-8-sig')
+    temp_path = f"期货合约信息整理_{datetime.now().strftime('%Y%m%d%H%M')}.xlsx"
+    final_df2.to_excel(temp_path, header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(temp_path)
 
-    my_send_email("期货合约信息整理", "buddaa", "buddaa@126.com", attachments_path=temp_path)
+    msg = "交易技术是永无止境的科学，也是一种不完美的艺术。"
+    recipients = ["buddaa@126.com", "263146874@qq.com"]
+    my_send_email("期货合约信息整理", msg, recipients, attachments_path=temp_path)
 
 
 if __name__ == '__main__':
