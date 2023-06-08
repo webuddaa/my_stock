@@ -42,9 +42,6 @@ def futures_zh_spot(symbol: str = "V2209", market: str = "CF") -> pd.DataFrame:
     :param market: CF 为商品期货
     :type market: str
     """
-    # file_data = "Math.round(Math.random() * 2147483648).toString(16)"
-    # ctx = py_mini_racer.MiniRacer()
-    # rn_code = ctx.eval(file_data)
     subscribe_list = ",".join(["nf_" + item.strip() for item in symbol.split(",")])
     url = f"https://hq.sinajs.cn/list={subscribe_list}"
     headers = {
@@ -143,10 +140,12 @@ def futures_zh_spot(symbol: str = "V2209", market: str = "CF") -> pd.DataFrame:
                 "_",
                 "_",
             ]
-        data_df = data_df[["symbol", "current_price", "volume"]]
         data_df["current_price"] = pd.to_numeric(data_df["current_price"])
+        data_df["avg_price"] = pd.to_numeric(data_df["avg_price"])
         data_df["volume"] = pd.to_numeric(data_df["volume"])
-        return data_df
+        data_df["amount"] = data_df["avg_price"] * data_df["volume"]
+        data_df2 = data_df[["symbol", "current_price", "volume", "amount"]]
+        return data_df2
     else:
         data_df.columns = [
             "open",
@@ -200,10 +199,11 @@ def futures_zh_spot(symbol: str = "V2209", market: str = "CF") -> pd.DataFrame:
             "_",
             "symbol",
         ]
-        data_df = data_df[["symbol", "current_price", "volume"]]
         data_df["current_price"] = pd.to_numeric(data_df["current_price"])
         data_df["volume"] = pd.to_numeric(data_df["volume"])
-        return data_df
+        data_df["amount"] = pd.to_numeric(data_df["amount"])
+        data_df2 = data_df[["symbol", "current_price", "volume", "amount"]]
+        return data_df2
 
 
 def convert_symbol(temp_symbol: str):
@@ -274,11 +274,15 @@ def cal_fea(kaicang, pincang, current_price, chengshu):
         val1 = float(kaicang.split("[")[1].split("]")[0])
         val2 = float(pincang.split("[")[1].split("]")[0])
 
-        return current_price * chengshu * (val1 + val2) / 10000
+        return round(current_price * chengshu * (val1 + val2) / 10000, 2)
     else:
         val1 = float(kaicang.split("元")[0])
         val2 = float(pincang.split("元")[0])
         return val1 + val2
+
+
+def cal_amount_fun(amount, factor):
+    return round(amount * factor / 100000000, 1)
 
 
 def get_futures_basis_info():
@@ -305,13 +309,13 @@ def get_futures_basis_info():
 
     ff_df = futures_zh_spot(symbol=ff_str, market="FF")
     ff_df["合约代码"] = ff_list
-    ff_df2 = ff_df[["合约代码", "current_price", "volume"]]
-    ff_df2.columns = ["合约代码", "现价", "成交量"]
+    ff_df2 = ff_df[["合约代码", "current_price", "volume", "amount"]]
+    ff_df2.columns = ["合约代码", "现价", "成交量", "成交额"]
 
     cf_df = futures_zh_spot(symbol=cf_str, market="CF")
     cf_df["合约代码"] = cf_list
-    cf_df2 = cf_df[["合约代码", "current_price", "volume"]]
-    cf_df2.columns = ["合约代码", "现价", "成交量"]
+    cf_df2 = cf_df[["合约代码", "current_price", "volume", "amount"]]
+    cf_df2.columns = ["合约代码", "现价", "成交量", "成交额"]
 
     current_price_df = pd.concat([ff_df2, cf_df2])
 
@@ -320,9 +324,9 @@ def get_futures_basis_info():
     final_df["每手保证金"] = final_df["现价"] * final_df["合约乘数"] * final_df["交易所保证金"] / 100
     final_df["手续费"] = final_df.apply(lambda row: cal_fea(row["手续费-开仓"], row["手续费-平今"], row["现价"], row["合约乘数"]), axis=1)
     final_df["最小跳动的浮亏比例"] = final_df["最小变动价位"] / final_df["现价"] * 100 / (final_df["交易所保证金"] + 1)
-    final_df["近似成交额"] = final_df["现价"] * final_df["成交量"]
+    final_df["成交额(亿元)"] = final_df.apply(lambda row: cal_amount_fun(row["成交额"], row["合约乘数"]), axis=1)
     final_df["手续费/保证金"] = final_df["手续费"] / final_df["每手保证金"]
-    final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "现价", "成交量", "近似成交额", "每手保证金", "手续费", "最小跳动的浮亏比例", "手续费/保证金", "是否主力合约"]]
+    final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "现价", "成交量", "成交额(亿元)", "每手保证金", "手续费", "最小跳动的浮亏比例", "手续费/保证金", "是否主力合约"]]
 
     update_futures_info_to_map(final_df2)
     temp_path = f"期货合约信息整理_{datetime.now().strftime('%Y%m%d%H%M')}.xlsx"
@@ -330,7 +334,7 @@ def get_futures_basis_info():
     send_wechat_file(temp_path)
 
     msg = "交易技术是永无止境的科学，也是一种不完美的艺术。"
-    recipients = ["buddaa@126.com", "263146874@qq.com"]
+    recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
     my_send_email("期货合约信息整理", msg, recipients, attachments_path=temp_path)
 
 
