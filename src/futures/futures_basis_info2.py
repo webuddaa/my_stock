@@ -270,6 +270,7 @@ def get_futures_basis_info_temp2():
 
 
 def cal_fea(kaicang, pincang, current_price, chengshu):
+    # 手续费在交易所的基础上加1分钱
     if kaicang.startswith("万分之"):
         val1 = float(kaicang.split("[")[1].split("]")[0])
         val2 = float(pincang.split("[")[1].split("]")[0])
@@ -278,7 +279,7 @@ def cal_fea(kaicang, pincang, current_price, chengshu):
     else:
         val1 = float(kaicang.split("元")[0])
         val2 = float(pincang.split("元")[0])
-        return val1 + val2
+        return val1 + val2 + 0.02
 
 
 def cal_amount_fun(amount, factor):
@@ -321,21 +322,23 @@ def get_futures_basis_info():
 
     final_df = pd.merge(df3, current_price_df, on="合约代码")
 
-    final_df["每手保证金"] = final_df["现价"] * final_df["合约乘数"] * final_df["交易所保证金"] / 100
-    final_df["手续费"] = final_df.apply(lambda row: cal_fea(row["手续费-开仓"], row["手续费-平今"], row["现价"], row["合约乘数"]), axis=1)
+    # 本人的保证金是交易所的基础上加1%
+    final_df["每手保证金"] = final_df["现价"] * final_df["合约乘数"] * (final_df["交易所保证金"] + 1) / 100
     final_df["最小跳动的浮亏比例"] = final_df["最小变动价位"] / final_df["现价"] * 100 / (final_df["交易所保证金"] + 1)
+
+    final_df["手续费"] = final_df.apply(lambda row: cal_fea(row["手续费-开仓"], row["手续费-平今"], row["现价"], row["合约乘数"]), axis=1)
     final_df["成交额(亿元)"] = final_df.apply(lambda row: cal_amount_fun(row["成交额"], row["合约乘数"]), axis=1)
     final_df["手续费/保证金"] = final_df["手续费"] / final_df["每手保证金"]
     final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "现价", "成交量", "成交额(亿元)", "每手保证金", "手续费", "最小跳动的浮亏比例", "手续费/保证金", "是否主力合约"]]
 
     update_futures_info_to_map(final_df2)
-    temp_path = f"期货合约信息整理_{datetime.now().strftime('%Y%m%d%H%M')}.xlsx"
+    temp_path = f"期货合约基本信息整理_{datetime.now().strftime('%Y%m%d%H%M')}.xlsx"
     final_df2.to_excel(temp_path, header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(temp_path)
 
     msg = "交易技术是永无止境的科学，也是一种不完美的艺术。"
     recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
-    my_send_email("期货合约信息整理", msg, recipients, attachments_path=temp_path)
+    my_send_email("期货合约基本信息整理", msg, recipients, attachments_path=temp_path)
 
 
 if __name__ == '__main__':
@@ -343,5 +346,5 @@ if __name__ == '__main__':
         get_futures_basis_info()
     except Exception as e:
         logger.exception(e)
-        send_wechat_msg("定时更新【期货合约信息整理.csv】失败")
+        send_wechat_msg("定时更新【期货合约信息整理.xlsx】失败")
 
