@@ -135,8 +135,7 @@ def buddaa():
     send_wechat_file(temp_path)
 
     msg = "交易技术是永无止境的科学，也是一种不完美的艺术。"
-    # recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
-    recipients = ["buddaa@foxmail.com"]
+    recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
     my_send_email("期货合约基本信息整理", msg, recipients, attachments_path=temp_path)
 
 
