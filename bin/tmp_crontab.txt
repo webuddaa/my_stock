@@ -6,7 +6,10 @@ nohup ./run_futures_basis_info.sh > aa.log 2>&1 &
 16 5 * * * /xiangfeng/my_stock/bin/run_select_futures_main.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
 
 
-3 17 * * 5 /xiangfeng/my_stock/bin/run_futures_basis_info.sh > /xiangfeng/my_stock/bin/aa2.log 2>&1 &
+3 17 * * 1,2,3,4,5 /xiangfeng/my_stock/bin/run_futures_basis_info.sh > /xiangfeng/my_stock/bin/aa.log 2>&1 &
+
+
+3 17 * * 5 /xiangfeng/my_stock/bin/run_futures_basis_info2.sh > /xiangfeng/my_stock/bin/aa2.log 2>&1 &
 
 
 ps x | grep 'run_select_futures_15m_5m' | grep -v grep | awk '{print $1}' | xargs kill -9

@@ -11,6 +11,8 @@ import qstock as qs
 from retrying import retry
 from loguru import logger
 import tempfile
+import argparse
+import json
 
 from src.utils.message_utils import send_wechat_file, my_send_email, send_wechat_msg
 
@@ -110,7 +112,7 @@ def get_futures_recent_price():
     return df5
 
 
-def buddaa():
+def buddaa(recipients):
     basis_dir = tempfile.gettempdir()
     df1 = get_futures_basis_info_temp1()
     df2 = get_futures_basis_info_temp2()
@@ -135,13 +137,16 @@ def buddaa():
     send_wechat_file(temp_path)
 
     msg = "交易技术是永无止境的科学，也是一种不完美的艺术。"
-    recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
+    # recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
     my_send_email("期货合约基本信息整理", msg, recipients, attachments_path=temp_path)
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--recipients', type=json.loads)
+    args = parser.parse_args()
     try:
-        buddaa()
+        buddaa(args.recipients)
     except Exception as e:
         logger.exception(e)
         send_wechat_msg("定时更新【期货合约信息整理.xlsx】失败")
