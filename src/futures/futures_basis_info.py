@@ -136,7 +136,16 @@ def buddaa(recipients):
     final_df2.to_excel(temp_path, header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(temp_path)
 
-    msg = "交易技术是永无止境的科学，也是一种不完美的艺术。"
+    # msg = "交易技术是永无止境的科学，也是一种不完美的艺术。"
+    msg = """
+    浊水倾波三万里，愀然独坐孤峰。
+    龙潜狮睡候飙风。
+    无情皆竖子，有泪亦英雄。 
+    
+    长剑倚天星斗烂，古今过眼成空。
+    乾坤俯仰任穷通。
+    半轮沧海上，一苇大江东。
+    """
     # recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
     my_send_email("期货合约基本信息整理", msg, recipients, attachments_path=temp_path)
 
