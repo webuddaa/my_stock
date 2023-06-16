@@ -99,6 +99,10 @@ def get_futures_basis_info_temp2():
             n += 1
 
 
+def percent_fun(x):
+    return format(x, ".3%")
+
+
 @retry(stop_max_attempt_number=5)
 def get_futures_recent_price():
     df = qs.realtime_data("期货")
@@ -124,19 +128,21 @@ def buddaa(recipients):
     # 本人的保证金是交易所的基础上加1%
     final_df["每手保证金"] = final_df["最新"] * final_df["合约乘数"] * (final_df["交易所保证金"] + 1) / 100
     final_df["最小跳动的浮亏比例"] = final_df["最小变动价位"] / final_df["最新"] * 100 / (final_df["交易所保证金"] + 1)
+    final_df["最小跳动的浮亏比例"] = final_df["最小跳动的浮亏比例"].apply(percent_fun)
 
     final_df["交易所手续费"] = final_df.apply(lambda row: cal_fea(row["手续费-开仓"], row["手续费-平今"], row["最新"], row["合约乘数"]), axis=1)
     final_df["成交额(亿元)"] = final_df["成交额"].apply(lambda x: round(x / 100000000, 2))
     final_df["手续费/保证金"] = final_df["交易所手续费"] / final_df["每手保证金"]
+    final_df["手续费/保证金"] = final_df["手续费/保证金"].apply(percent_fun)
+
     final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金",
-                          "手续费-开仓", "手续费-平今", "最新", "成交量", "成交额(亿元)",
+                          "手续费-开仓", "手续费-平今", "最新", "成交额(亿元)",
                           "每手保证金", "交易所手续费", "最小跳动的浮亏比例", "手续费/保证金", "是否主力合约"]]
 
     temp_path = f"{basis_dir}/期货合约基本信息整理_{datetime.now().strftime('%Y%m%d%H%M')}.xlsx"
     final_df2.to_excel(temp_path, header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(temp_path)
 
-    # msg = "交易技术是永无止境的科学，也是一种不完美的艺术。"
     msg = """
     临江仙·缠中说禅
     浊水倾波三万里，愀然独坐孤峰。龙潜狮睡候飙风。
