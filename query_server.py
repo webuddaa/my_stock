@@ -11,7 +11,7 @@ from src.config.common_config import SERVER_IP, SERVER_PORT
 app = Flask(__name__, template_folder=f"./templates")
 
 
-@app.route('/molin_long_time_for_profit', methods=["GET"])
+@app.route('/future_theory', methods=["GET"])
 def molin_long_time_for_profit():
     ip_port = f"{SERVER_IP}:{SERVER_PORT}"
     return render_template("submit_long_time_for_profit.html", ip_port=ip_port)
