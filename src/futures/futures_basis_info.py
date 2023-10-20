@@ -151,7 +151,7 @@ def buddaa(recipients):
 
     final_df["交易时长"] = final_df["品种中文"].apply(lambda x: future_duration_dic.get(x, 345))
     final_df["分钟成交额"] = final_df["成交额(亿元)"] / final_df["交易时长"]
-    final_df["分钟成交额"] = final_df["分钟成交额"].apply(percent_fun)
+    final_df["分钟成交额"] = final_df["分钟成交额"].apply(lambda x: round(x, 2))
 
     final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金",
                           "手续费-开仓", "手续费-平今", "最新", "成交额(亿元)", "交易时长", "分钟成交额",
