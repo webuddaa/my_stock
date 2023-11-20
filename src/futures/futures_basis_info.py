@@ -80,12 +80,17 @@ def get_futures_basis_info_temp1():
 
 
 def get_futures_basis_info_temp2():
+    headers = {
+        "Accept-Language": "zh-Hans-CN,zh-Hans;q=0.8,en-US;q=0.5,en;q=0.3",
+        "Host": "www.gtjaqh.com",
+        "User-Agent": "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; Tablet PC 2.0; wbx 1.0.0; wbxapp 1.0.0; Zoom 3.6.0)",
+    }
     n = 0
     while True:
         sdt = (datetime.now() - timedelta(days=n)).strftime("%Y%m%d")
         try:
             url = f"https://www.gtjaqh.com/pc/calendar?date={sdt}"
-            r = requests.get(url)
+            r = requests.get(url, headers=headers, verify=False)
             big_df = pd.read_html(r.text, header=1)[0]
             big_df2 = big_df[["品种", "代码", "合约乘数", "最小变动价位"]]
             big_df2["target"] = big_df2["品种"].apply(lambda x: x.endswith("期权"))
@@ -123,7 +128,7 @@ def buddaa(recipients):
     df3 = pd.merge(df1, df2, on="合约品种")
 
     tt = get_futures_recent_price()
-    final_df = pd.merge(df3, tt, on="合约代码")
+    final_df = pd.merge(df3, tt, on="合约代码", how="left")
 
     future_duration_dic = {'原油': 555.0, '黄金': 555.0, '白银': 555.0, '镍': 465.0, '铜': 465.0, '锌': 465.0, '铝': 465.0,
                            '锡': 465.0, '不锈钢': 465.0, '氧化铝': 465.0, '铅': 465.0, '国际铜': 465.0, '豆油': 345.0, '天然橡胶': 345.0,
@@ -136,7 +141,7 @@ def buddaa(recipients):
                            '10年期国债': 240.0, '沪深300股指期货': 240.0, '5年期国债': 240.0, '中证500股指期货': 240.0, '中证1000股指期货': 240.0,
                            '上证50股指期货': 240.0, '30年期国债': 240.0, '尿素': 225.0, '集运指数(欧线)': 225.0, '生猪': 225.0, '苹果': 225.0,
                            '硅铁': 225.0, '红枣': 225.0, '锰硅': 225.0, '花生': 225.0, '鸡蛋': 225.0, '纤维板': 225.0, '线材': 225.0,
-                           '油菜籽': 225.0}
+                           '油菜籽': 225.0, '碳酸锂': 225.0}
 
     # 本人的保证金是交易所的基础上加1%
     final_df["每手保证金"] = final_df["最新"] * final_df["合约乘数"] * (final_df["交易所保证金"] + 1) / 100
