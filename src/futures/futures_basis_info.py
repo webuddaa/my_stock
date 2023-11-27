@@ -121,14 +121,31 @@ def get_futures_recent_price():
     return df5
 
 
+def get_lc_recent_price(lc_list):
+    """获取碳酸锂的数据"""
+    today = datetime.now().strftime("%Y%m%d")
+    lc_df = qs.get_data(lc_list, start=today, end=today)
+    lc_df2 = lc_df[["code", "close", "volume", "turnover"]].reset_index()
+    lc_df2["new_code"] = lc_df2["code"].apply(lambda x: x.upper())
+    lc_df3 = lc_df2[["new_code", "close", "volume", "turnover"]]
+    lc_df3.columns = ["合约代码", "最新", "成交量", "成交额"]
+    return lc_df3
+
+
 def buddaa(recipients):
     basis_dir = tempfile.gettempdir()
     df1 = get_futures_basis_info_temp1()
     df2 = get_futures_basis_info_temp2()
     df3 = pd.merge(df1, df2, on="合约品种")
 
+    # 获取所有品种的成交量数据（除碳酸锂。。。）
     tt = get_futures_recent_price()
-    final_df = pd.merge(df3, tt, on="合约代码", how="left")
+
+    lc_list = list(df3[df3["合约品种"] == "LC"]["合约代码"])
+    lc_list2 = [ele.lower() for ele in lc_list]
+    lc_df = get_lc_recent_price(lc_list2)
+    tt2 = pd.concat([tt, lc_df])
+    final_df = pd.merge(df3, tt2, on="合约代码", how="left")
 
     future_duration_dic = {'原油': 555.0, '黄金': 555.0, '白银': 555.0, '镍': 465.0, '铜': 465.0, '锌': 465.0, '铝': 465.0,
                            '锡': 465.0, '不锈钢': 465.0, '氧化铝': 465.0, '铅': 465.0, '国际铜': 465.0, '豆油': 345.0, '天然橡胶': 345.0,
