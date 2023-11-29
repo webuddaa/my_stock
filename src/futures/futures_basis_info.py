@@ -11,8 +11,6 @@ import qstock as qs
 from retrying import retry
 from loguru import logger
 import tempfile
-import argparse
-import json
 
 from src.utils.message_utils import send_wechat_file, my_send_email, send_wechat_msg
 
@@ -118,6 +116,7 @@ def get_futures_recent_price():
     df3["合约代码"] = df3.apply(lambda row: generate_new_code(row["代码"], row["名称"]), axis=1)
     df4 = df3.dropna()
     df5 = df4[["合约代码", "最新", "成交量", "成交额"]]
+    df5.columns = ["合约代码", "收盘价", "成交量", "成交额"]
     return df5
 
 
@@ -128,11 +127,11 @@ def get_lc_recent_price(lc_list):
     lc_df2 = lc_df[["code", "close", "volume", "turnover"]].reset_index()
     lc_df2["new_code"] = lc_df2["code"].apply(lambda x: x.upper())
     lc_df3 = lc_df2[["new_code", "close", "volume", "turnover"]]
-    lc_df3.columns = ["合约代码", "最新", "成交量", "成交额"]
+    lc_df3.columns = ["合约代码", "收盘价", "成交量", "成交额"]
     return lc_df3
 
 
-def buddaa(recipients):
+def buddaa():
     basis_dir = tempfile.gettempdir()
     df1 = get_futures_basis_info_temp1()
     df2 = get_futures_basis_info_temp2()
@@ -161,12 +160,11 @@ def buddaa(recipients):
                            '油菜籽': 225.0, '碳酸锂': 225.0}
 
     # 本人的保证金是交易所的基础上加1%
-    final_df["每手保证金"] = final_df["最新"] * final_df["合约乘数"] * (final_df["交易所保证金"] + 1) / 100
-    final_df["最小跳动的浮亏比例"] = final_df["最小变动价位"] / final_df["最新"] * 100 / (final_df["交易所保证金"] + 1)
+    final_df["每手保证金"] = final_df["收盘价"] * final_df["合约乘数"] * (final_df["交易所保证金"] + 1) / 100
+    final_df["最小跳动的浮亏比例"] = final_df["最小变动价位"] / final_df["收盘价"] * 100 / (final_df["交易所保证金"] + 1)
     final_df["最小跳动的浮亏比例"] = final_df["最小跳动的浮亏比例"].apply(percent_fun)
 
-    final_df["交易所手续费"] = final_df.apply(lambda row: cal_fea(row["手续费-开仓"], row["手续费-平今"], row["最新"], row["合约乘数"]),
-                                        axis=1)
+    final_df["交易所手续费"] = final_df.apply(lambda row: cal_fea(row["手续费-开仓"], row["手续费-平今"], row["收盘价"], row["合约乘数"]), axis=1)
     final_df["成交额(亿元)"] = final_df["成交额"].apply(lambda x: round(x / 100000000, 2))
     final_df["手续费/保证金"] = final_df["交易所手续费"] / final_df["每手保证金"]
     final_df["手续费/保证金"] = final_df["手续费/保证金"].apply(percent_fun)
@@ -175,7 +173,7 @@ def buddaa(recipients):
     final_df["分钟成交额"] = final_df["成交额(亿元)"] / final_df["交易时长"]
     final_df["分钟成交额"] = final_df["分钟成交额"].apply(lambda x: round(x, 2))
 
-    final_df2 = final_df[["品种中文", "合约代码", "最新", "成交额(亿元)", "分钟成交额", "成交量",
+    final_df2 = final_df[["品种中文", "合约代码", "收盘价", "成交额(亿元)", "分钟成交额", "成交量",
                           "每手保证金", "交易所手续费", "最小跳动的浮亏比例", "手续费/保证金",
                           "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "交易时长",
                           "是否主力合约"]]
@@ -189,16 +187,16 @@ def buddaa(recipients):
     浊水倾波三万里，愀然独坐孤峰。龙潜狮睡候飙风。无情皆竖子，有泪亦英雄。 
     长剑倚天星斗烂，古今过眼成空。乾坤俯仰任穷通。半轮沧海上，一苇大江东。
     """
-    # recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
-    my_send_email("期货合约基本信息整理", msg, recipients, attachments_path=temp_path)
+    recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
+    if datetime.now().isoweekday() == 5:
+        my_send_email("期货合约基本信息整理", msg, recipients, attachments_path=temp_path)
+    else:
+        my_send_email("期货合约基本信息整理", msg, "buddaa@foxmail.com", attachments_path=temp_path)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--recipients', type=json.loads)
-    args = parser.parse_args()
     try:
-        buddaa(args.recipients)
+        buddaa()
     except Exception as e:
         logger.exception(e)
         send_wechat_msg("定时更新【期货合约信息整理.xlsx】失败")
