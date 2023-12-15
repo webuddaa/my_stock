@@ -178,7 +178,7 @@ def buddaa():
                           "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "交易时长",
                           "是否主力合约"]]
 
-    temp_path = f"{basis_dir}/期货合约基本信息整理_{datetime.now().strftime('%Y%m%d%H%M')}.xlsx"
+    temp_path = f"{basis_dir}/期货合约基本信息_{datetime.now().strftime('%Y%m%d')}.xlsx"
     final_df2.to_excel(temp_path, header=True, index=False, encoding='utf-8-sig')
     send_wechat_file(temp_path)
 
