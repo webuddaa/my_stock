@@ -90,11 +90,11 @@ def get_futures_basis_info_temp2():
             url = f"https://www.gtjaqh.com/pc/calendar?date={sdt}"
             r = requests.get(url, headers=headers, verify=False)
             big_df = pd.read_html(r.text, header=1)[0]
-            big_df2 = big_df[["品种", "代码", "合约乘数", "最小变动价位"]]
+            big_df2 = big_df[["品种", "代码", "合约乘数", "最小变动价位", "交易所"]]
             big_df2["target"] = big_df2["品种"].apply(lambda x: x.endswith("期权"))
             big_df3 = big_df2[big_df2["target"] == False]
-            big_df4 = big_df3[["品种", "代码", "合约乘数", "最小变动价位"]]
-            big_df4.columns = ["品种中文", "合约品种", "合约乘数", "最小变动价位"]
+            big_df4 = big_df3[["品种", "代码", "合约乘数", "最小变动价位", "交易所"]]
+            big_df4.columns = ["品种中文", "合约品种", "合约乘数", "最小变动价位", "交易所"]
             return big_df4
         except:
             if n > 10:
@@ -176,7 +176,7 @@ def buddaa():
     final_df2 = final_df[["品种中文", "合约代码", "收盘价", "成交额(亿元)", "分钟成交额", "成交量",
                           "每手保证金", "交易所手续费", "最小跳动的浮亏比例", "手续费/保证金",
                           "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今", "交易时长",
-                          "是否主力合约"]]
+                          "是否主力合约", "交易所"]]
 
     temp_path = f"{basis_dir}/期货合约基本信息_{datetime.now().strftime('%Y%m%d')}.xlsx"
     final_df2.to_excel(temp_path, header=True, index=False, encoding='utf-8-sig')
