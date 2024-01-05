@@ -1,7 +1,7 @@
 """
 @author: xuxiangfeng
 @date: 2023/6/13
-@file_name: futures_basis_info.py
+@file_name: futures_basis_func.py
 """
 import requests
 import pandas as pd
@@ -9,12 +9,6 @@ import re
 from datetime import datetime, timedelta
 import qstock as qs
 from retrying import retry
-from loguru import logger
-import tempfile
-import argparse
-import json
-
-from src.utils.message_utils import send_wechat_file, my_send_email, send_wechat_msg
 
 
 def convert_symbol(temp_symbol: str):
@@ -80,18 +74,23 @@ def get_futures_basis_info_temp1():
 
 
 def get_futures_basis_info_temp2():
+    headers = {
+        "Accept-Language": "zh-Hans-CN,zh-Hans;q=0.8,en-US;q=0.5,en;q=0.3",
+        "Host": "www.gtjaqh.com",
+        "User-Agent": "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; Tablet PC 2.0; wbx 1.0.0; wbxapp 1.0.0; Zoom 3.6.0)",
+    }
     n = 0
     while True:
         sdt = (datetime.now() - timedelta(days=n)).strftime("%Y%m%d")
         try:
             url = f"https://www.gtjaqh.com/pc/calendar?date={sdt}"
-            r = requests.get(url)
+            r = requests.get(url, headers=headers, verify=False)
             big_df = pd.read_html(r.text, header=1)[0]
-            big_df2 = big_df[["品种", "代码", "合约乘数", "最小变动价位"]]
+            big_df2 = big_df[["品种", "代码", "合约乘数", "最小变动价位", "交易所"]]
             big_df2["target"] = big_df2["品种"].apply(lambda x: x.endswith("期权"))
             big_df3 = big_df2[big_df2["target"] == False]
-            big_df4 = big_df3[["品种", "代码", "合约乘数", "最小变动价位"]]
-            big_df4.columns = ["品种中文", "合约品种", "合约乘数", "最小变动价位"]
+            big_df4 = big_df3[["品种", "代码", "合约乘数", "最小变动价位", "交易所"]]
+            big_df4.columns = ["品种中文", "合约品种", "合约乘数", "最小变动价位", "交易所"]
             return big_df4
         except:
             if n > 10:
@@ -113,56 +112,5 @@ def get_futures_recent_price():
     df3["合约代码"] = df3.apply(lambda row: generate_new_code(row["代码"], row["名称"]), axis=1)
     df4 = df3.dropna()
     df5 = df4[["合约代码", "最新", "成交量", "成交额"]]
+    df5.columns = ["合约代码", "收盘价", "成交量", "成交额"]
     return df5
-
-
-def buddaa(recipients):
-    basis_dir = tempfile.gettempdir()
-    df1 = get_futures_basis_info_temp1()
-    df2 = get_futures_basis_info_temp2()
-    df3 = pd.merge(df1, df2, on="合约品种")
-
-    tt = get_futures_recent_price()
-    final_df = pd.merge(df3, tt, on="合约代码")
-
-    # 本人的保证金是交易所的基础上加1%
-    final_df["每手保证金"] = final_df["最新"] * final_df["合约乘数"] * (final_df["交易所保证金"] + 1) / 100
-    final_df["最小跳动的浮亏比例"] = final_df["最小变动价位"] / final_df["最新"] * 100 / (final_df["交易所保证金"] + 1)
-    final_df["最小跳动的浮亏比例"] = final_df["最小跳动的浮亏比例"].apply(percent_fun)
-
-    final_df["交易所手续费"] = final_df.apply(lambda row: cal_fea(row["手续费-开仓"], row["手续费-平今"], row["最新"], row["合约乘数"]), axis=1)
-    final_df["成交额(亿元)"] = final_df["成交额"].apply(lambda x: round(x / 100000000, 2))
-    final_df["手续费/保证金"] = final_df["交易所手续费"] / final_df["每手保证金"]
-    final_df["手续费/保证金"] = final_df["手续费/保证金"].apply(percent_fun)
-
-    final_df2 = final_df[["品种中文", "合约代码", "最小变动价位", "合约乘数", "交易所保证金",
-                          "手续费-开仓", "手续费-平今", "最新", "成交额(亿元)",
-                          "每手保证金", "交易所手续费", "最小跳动的浮亏比例", "手续费/保证金", "是否主力合约"]]
-
-    temp_path = f"{basis_dir}/期货合约基本信息整理_{datetime.now().strftime('%Y%m%d%H%M')}.xlsx"
-    final_df2.to_excel(temp_path, header=True, index=False, encoding='utf-8-sig')
-    send_wechat_file(temp_path)
-
-    msg = """
-    临江仙·缠中说禅
-    浊水倾波三万里，愀然独坐孤峰。龙潜狮睡候飙风。
-    无情皆竖子，有泪亦英雄。 
-    
-    长剑倚天星斗烂，古今过眼成空。乾坤俯仰任穷通。
-    半轮沧海上，一苇大江东。
-    """
-    # recipients = ["buddaa@foxmail.com", "263146874@qq.com"]
-    my_send_email("期货合约基本信息整理", msg, recipients, attachments_path=temp_path)
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--recipients', type=json.loads)
-    args = parser.parse_args()
-    try:
-        buddaa(args.recipients)
-    except Exception as e:
-        logger.exception(e)
-        send_wechat_msg("定时更新【期货合约信息整理.xlsx】失败")
-
-
