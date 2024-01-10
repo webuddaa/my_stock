@@ -56,10 +56,10 @@ def cal_fea(kaicang, pincang, current_price, chengshu):
 def get_futures_basis_info_temp1():
     url = "https://www.9qihuo.com/qihuoshouxufei"
     headers = {
-    "Accept-Language": "zh-Hans-CN,zh-Hans;q=0.8,en-US;q=0.5,en;q=0.3",
-    "Host": "www.gtjaqh.com",
-    "User-Agent": "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; Tablet PC 2.0; wbx 1.0.0; wbxapp 1.0.0; Zoom 3.6.0)",
-}
+        "Accept-Language": "zh-Hans-CN,zh-Hans;q=0.8,en-US;q=0.5,en;q=0.3",
+        "Host": "www.gtjaqh.com",
+        "User-Agent": "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; Tablet PC 2.0; wbx 1.0.0; wbxapp 1.0.0; Zoom 3.6.0)",
+    }
     r = requests.get(url, headers=headers, verify=False)
     temp_df = pd.read_html(r.text)[0]
 

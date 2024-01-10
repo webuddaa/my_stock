@@ -3,7 +3,7 @@ import pandas as pd
 
 from src.config.common_config import PATH
 from src.futures.futures_basis_func import get_futures_basis_info_temp1, get_futures_basis_info_temp2
-from src.utils.message_utils import send_wechat_msg
+from src.utils.message_utils import my_send_email
 
 
 def buddaa():
@@ -22,4 +22,4 @@ if __name__ == '__main__':
         buddaa()
     except Exception as e:
         logger.exception(e)
-        send_wechat_msg("定时更新【期货合约基本信息.xlsx】失败")
+        my_send_email("更新期货信息报错", "定时更新【期货合约基本信息.xlsx】失败", "buddaa@foxmail.com")

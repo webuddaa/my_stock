@@ -3,8 +3,7 @@ from datetime import datetime
 
 from src.config.common_config import PATH
 from src.futures.futures_basis_func import get_futures_recent_price
-from src.utils.message_utils import send_wechat_msg
-
+from src.utils.message_utils import my_send_email
 
 if __name__ == '__main__':
     try:
@@ -23,4 +22,5 @@ if __name__ == '__main__':
             logger.info("时间不匹配")
     except Exception as e:
         logger.exception(e)
-        send_wechat_msg("定时更新【所有合约收盘后的情况】失败")
+        my_send_email("更新期货信息报错", "定时更新【所有合约收盘后的情况】失败", "buddaa@foxmail.com")
+
