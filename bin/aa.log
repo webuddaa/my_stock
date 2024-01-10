@@ -1,1 +1,132 @@
-2024-01-08 15:02:05.851 | INFO     | src.utils.message_utils:my_send_email:38 - send email success
+2024-01-10 10:18:04.567 | ERROR    | __main__:<module>:24 - HTTPSConnectionPool(host='www.9qihuo.com', port=443): Max retries exceeded with url: /qihuoshouxufei (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1125)')))
+Traceback (most recent call last):
+
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/urllib3/connectionpool.py", line 703, in urlopen
+    httplib_response = self._make_request(
+                       │    └ <function HTTPConnectionPool._make_request at 0x7f92c27bbee0>
+                       └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f92b11f8280>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/urllib3/connectionpool.py", line 386, in _make_request
+    self._validate_conn(conn)
+    │    │              └ <urllib3.connection.HTTPSConnection object at 0x7f92b11f8e50>
+    │    └ <function HTTPSConnectionPool._validate_conn at 0x7f92c27bd430>
+    └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f92b11f8280>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/urllib3/connectionpool.py", line 1040, in _validate_conn
+    conn.connect()
+    │    └ <function HTTPSConnection.connect at 0x7f92c2797ee0>
+    └ <urllib3.connection.HTTPSConnection object at 0x7f92b11f8e50>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/urllib3/connection.py", line 416, in connect
+    self.sock = ssl_wrap_socket(
+    │    │      └ <function ssl_wrap_socket at 0x7f92c27e0700>
+    │    └ None
+    └ <urllib3.connection.HTTPSConnection object at 0x7f92b11f8e50>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/urllib3/util/ssl_.py", line 449, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(
+               └ <function _ssl_wrap_socket_impl at 0x7f92c27e08b0>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/urllib3/util/ssl_.py", line 493, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           │           │           │                     └ 'www.9qihuo.com'
+           │           │           └ <socket.socket [closed] fd=-1, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6>
+           │           └ <function SSLContext.wrap_socket at 0x7f92d1186430>
+           └ <ssl.SSLContext object at 0x7f92b1253f40>
+  File "/xiangfeng/anaconda3/lib/python3.8/ssl.py", line 500, in wrap_socket
+    return self.sslsocket_class._create(
+           │    │               └ <classmethod object at 0x7f92d1181dc0>
+           │    └ <class 'ssl.SSLSocket'>
+           └ <ssl.SSLContext object at 0x7f92b1253f40>
+  File "/xiangfeng/anaconda3/lib/python3.8/ssl.py", line 1040, in _create
+    self.do_handshake()
+    │    └ <function SSLSocket.do_handshake at 0x7f92d1189310>
+    └ <ssl.SSLSocket [closed] fd=-1, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6>
+  File "/xiangfeng/anaconda3/lib/python3.8/ssl.py", line 1309, in do_handshake
+    self._sslobj.do_handshake()
+    │    └ None
+    └ <ssl.SSLSocket [closed] fd=-1, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6>
+
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1125)
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/requests/adapters.py", line 439, in send
+    resp = conn.urlopen(
+           │    └ <function HTTPConnectionPool.urlopen at 0x7f92c27bd160>
+           └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f92b11f8280>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/urllib3/connectionpool.py", line 785, in urlopen
+    retries = retries.increment(
+              │       └ <function Retry.increment at 0x7f92c27c63a0>
+              └ Retry(total=0, connect=None, read=False, redirect=None, status=None)
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/urllib3/util/retry.py", line 592, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+          │             │      │    │        │             └ 'unknown'
+          │             │      │    │        └ <class 'urllib3.exceptions.ResponseError'>
+          │             │      │    └ SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_s...
+          │             │      └ '/qihuoshouxufei'
+          │             └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x7f92b11f8280>
+          └ <class 'urllib3.exceptions.MaxRetryError'>
+
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='www.9qihuo.com', port=443): Max retries exceeded with url: /qihuoshouxufei (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1125)')))
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "/xiangfeng/anaconda3/lib/python3.8/runpy.py", line 194, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': 'src.run_files', '__loader__': <_frozen_importlib_external.SourceFil...
+           │         └ <code object <module> at 0x7f92d8bf7920, file "/xiangfeng/my_stock/src/run_files/run_future_basis_info.py", line 1>
+           └ <function _run_code at 0x7f92d17330d0>
+  File "/xiangfeng/anaconda3/lib/python3.8/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': 'src.run_files', '__loader__': <_frozen_importlib_external.SourceFil...
+         └ <code object <module> at 0x7f92d8bf7920, file "/xiangfeng/my_stock/src/run_files/run_future_basis_info.py", line 1>
+
+> File "/xiangfeng/my_stock/src/run_files/run_future_basis_info.py", line 22, in <module>
+    buddaa()
+    └ <function buddaa at 0x7f92d17545e0>
+
+  File "/xiangfeng/my_stock/src/run_files/run_future_basis_info.py", line 10, in buddaa
+    df1 = get_futures_basis_info_temp1()
+          └ <function get_futures_basis_info_temp1 at 0x7f92b125f3a0>
+
+  File "/xiangfeng/my_stock/src/futures/futures_basis_func.py", line 58, in get_futures_basis_info_temp1
+    r = requests.get(url)
+        │        │   └ 'https://www.9qihuo.com/qihuoshouxufei'
+        │        └ <function get at 0x7f92c258c670>
+        └ <module 'requests' from '/xiangfeng/my_stock/venv/lib/python3.8/site-packages/requests/__init__.py'>
+
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/requests/api.py", line 76, in get
+    return request('get', url, params=params, **kwargs)
+           │              │           │         └ {'allow_redirects': True}
+           │              │           └ None
+           │              └ 'https://www.9qihuo.com/qihuoshouxufei'
+           └ <function request at 0x7f92c25775e0>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/requests/api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+           │       │              │           │      └ {'params': None, 'allow_redirects': True}
+           │       │              │           └ 'https://www.9qihuo.com/qihuoshouxufei'
+           │       │              └ 'get'
+           │       └ <function Session.request at 0x7f92c258bdc0>
+           └ <requests.sessions.Session object at 0x7f92d8c1bf70>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/requests/sessions.py", line 542, in request
+    resp = self.send(prep, **send_kwargs)
+           │    │    │       └ {'timeout': None, 'allow_redirects': True, 'verify': True, 'proxies': OrderedDict(), 'stream': False, 'cert': None}
+           │    │    └ <PreparedRequest [GET]>
+           │    └ <function Session.send at 0x7f92c258c280>
+           └ <requests.sessions.Session object at 0x7f92d8c1bf70>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/requests/sessions.py", line 655, in send
+    r = adapter.send(request, **kwargs)
+        │       │    │          └ {'timeout': None, 'verify': True, 'proxies': OrderedDict(), 'stream': False, 'cert': None}
+        │       │    └ <PreparedRequest [GET]>
+        │       └ <function HTTPAdapter.send at 0x7f92c258b700>
+        └ <requests.adapters.HTTPAdapter object at 0x7f92b125e340>
+  File "/xiangfeng/my_stock/venv/lib/python3.8/site-packages/requests/adapters.py", line 514, in send
+    raise SSLError(e, request=request)
+          │                   └ <PreparedRequest [GET]>
+          └ <class 'requests.exceptions.SSLError'>
+
+requests.exceptions.SSLError: HTTPSConnectionPool(host='www.9qihuo.com', port=443): Max retries exceeded with url: /qihuoshouxufei (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1125)')))
