@@ -8,9 +8,10 @@
 jupyter/
 */.ipynb_checkpoints/
 /bin/*.log
-/venv
-/log_files
-/static
+venv/
+log_files/
+static/
+data/
 
 
 

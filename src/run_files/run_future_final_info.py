@@ -4,14 +4,14 @@ from datetime import datetime
 
 from src.config.common_config import PATH, DAY_ONLY_SYMBOL_LIST
 from src.futures.futures_basis_func import get_futures_recent_price, percent_fun, cal_fea
-from src.utils.message_utils import send_wechat_msg, send_wechat_file, my_send_email
+from src.utils.message_utils import send_wechat_file, my_send_email
 
 
 def cal_daily_turnover(turnover, exchange):
     if exchange == "中金所":
-        return round(turnover / 240, 2)
+        return round(turnover / 24000000000, 2)
     else:
-        return round(turnover / 225, 2)
+        return round(turnover / 22500000000, 2)
 
 
 if __name__ == '__main__':
@@ -40,15 +40,15 @@ if __name__ == '__main__':
         df4["成交额(21-23)(亿元)"] = df4["成交额(21-23)"].apply(lambda x: round(x / 100000000, 2))
         df4["手续费/保证金"] = df4["交易所手续费"] / df4["每手保证金"]
         df4["手续费/保证金"] = df4["手续费/保证金"].apply(percent_fun)
-        df4["分钟成交额(21-23)(亿元)"] = df4["成交额(21-23)(亿元)"].apply(lambda x: round(x / 120, 2))
-        df4["分钟成交额(09-15)(亿元)"] = df4.apply(lambda row: cal_daily_turnover(row["成交额(09-15)(亿元)"], row["交易所"]), axis=1)
+        df4["分钟成交额(21-23)(亿元)"] = df4["成交额(21-23)"].apply(lambda x: round(x / 12000000000, 2))
+        df4["分钟成交额(09-15)(亿元)"] = df4.apply(lambda row: cal_daily_turnover(row["成交额(09-15)"], row["交易所"]), axis=1)
 
-        df5 = df4[["品种中文", "合约代码", "收盘价", "分钟成交额(21-23)(亿元)", "分钟成交额(09-15)(亿元)",
+        df5 = df4[["品种中文", "合约代码", "收盘价", "是否主力合约", "交易所",
+                   "分钟成交额(21-23)(亿元)", "分钟成交额(09-15)(亿元)",
                    "每手保证金", "交易所手续费", "最小跳动的浮亏比例", "手续费/保证金",
                    "最小变动价位", "合约乘数", "交易所保证金", "手续费-开仓", "手续费-平今",
-                   "是否主力合约", "交易所", "成交额(21-23)(亿元)", "成交量(21-23)", "成交额(09-15)(亿元)", "成交量(09-15)"]]
+                   "成交额(21-23)(亿元)", "成交额(09-15)(亿元)", "成交量(21-23)", "成交量(09-15)"]]
 
-       
         temp_path = f"{PATH}/log_files/期货合约日维度数据汇总_{datetime.now().strftime('%Y%m%d')}.xlsx"
         df5.to_excel(temp_path, header=True, index=False, encoding='utf-8-sig')
         send_wechat_file(temp_path)
@@ -66,4 +66,4 @@ if __name__ == '__main__':
 
     except Exception as e:
         logger.exception(e)
-        send_wechat_msg("定时更新【期货合约日维度数据汇总.xlsx】失败")
+        my_send_email("更新期货信息报错", "定时更新【期货合约日维度数据汇总.xlsx】失败", "buddaa@foxmail.com")
